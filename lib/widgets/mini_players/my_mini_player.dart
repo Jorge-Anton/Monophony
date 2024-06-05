@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:monophony/controllers/audio_controller.dart';
+import 'package:monophony/controllers/dominant_color_controller.dart';
 import 'package:monophony/controllers/mini_player_controller.dart';
 import 'package:monophony/controllers/selected_song_controller.dart';
 import 'package:monophony/services/service_locator.dart';
@@ -48,12 +49,11 @@ class _MyMiniPlayerState extends State<MyMiniPlayer> {
             audioController.stop();
             audioController.seek(Duration.zero);
             selectedSongController.clearActiveSong();
+            getIt<DominantColorController>().value = Colors.blue;
             shouldExpand = true;
           },
           controller: myMiniplayerController.controller,
-          onDragDown: (dragDownPercentage) {
-            myMiniplayerController.dragDownPercentageNotifier.value = dragDownPercentage;
-          },
+          dragDownPercentage: myMiniplayerController.dragDownPercentageNotifier,
           tapToCollapse: false,
           curve: Curves.ease,
           duration: Durations.medium2,

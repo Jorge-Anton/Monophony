@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MyFab extends StatelessWidget {
-  const MyFab({
+class HideOnScrollFab extends StatelessWidget {
+  const HideOnScrollFab({
     super.key,
     required this.showFabNotifier,
     required this.onPressed,

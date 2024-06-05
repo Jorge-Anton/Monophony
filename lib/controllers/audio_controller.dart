@@ -8,13 +8,12 @@ import 'package:monophony/notifiers/progress_notifier.dart';
 import 'package:monophony/notifiers/repeat_one_button_notifier.dart';
 import 'package:monophony/notifiers/repeat_playlist_button_notifier.dart';
 import 'package:monophony/services/get_queue.dart';
-import 'package:monophony/utils/parse_duration.dart';
 
 import '../services/service_locator.dart';
 
 class AudioController {
-  final currentSongNotifier = ValueNotifier<MediaItem?>(null);
-  final playlistNotifier = ValueNotifier<List<MediaItem>>([]);
+  final currentSongNotifier = ValueNotifier<SongModel?>(null);
+  final playlistNotifier = ValueNotifier<List<SongModel>>([]);
   final progressNotifier = ProgressNotifier();
   final playButtonNotifier = PlayButtonNotifier();
   final repeatOneButtonNotifier = RepeatOneButtonNotifier();
@@ -38,10 +37,7 @@ class AudioController {
   void loadNewQueue() async {
     await _audioHandler.stop();
     await _audioHandler.seek(Duration.zero);
-    // await _audioHandler.customAction('clear');
     init();
-    // await _loadPlaylist();
-    // await play();
   }
 
   Future<void> _loadPlaylist() async {
@@ -49,46 +45,20 @@ class AudioController {
     final selectedSongController = getIt<SelectedSongController>();
     final firstSong = selectedSongController.selectedSongNotifier.value;
     if (firstSong != null) {
-      await _audioHandler.addQueueItem(
-        MediaItem(
-          id: firstSong.id, 
-          title: firstSong.title,
-          artist: firstSong.artists.join(""),
-          artUri: Uri.parse('${firstSong.thumbnail}-w896-h896'),
-          duration: parseDuration(firstSong.duration),
-          extras: {
-            'artists': firstSong.artists
-          }
-        )
-      );
+      await _audioHandler.addQueueItem(firstSong);
 
       play();
 
       final playlist = await getQueue(firstSong.id);
       playlist.removeAt(0);
-      final List<MediaItem> mediaItems = [];
-      for (final song in playlist) {
-        mediaItems.add(
-          MediaItem(
-            id: song.id, 
-            title: song.title,
-            artist: song.artists.join(""),
-            artUri: Uri.parse('${song.thumbnail}-w896-h896'),
-            duration: parseDuration(song.duration),
-            extras: {
-              'artists': song.artists
-            }
-          )
-        );
-      }
-      _audioHandler.addQueueItems(mediaItems);
+      _audioHandler.addQueueItems(playlist);
     }
   }
 
   void _listenToChangesInPlaylist() {
     _audioHandler.queue.listen((playlist) {
       if (playlist.isEmpty) return;
-      playlistNotifier.value = playlist;
+      playlistNotifier.value = playlist.map((item) => SongModel.fromMediaItem(item)).toList();
     });
   }
 
@@ -147,7 +117,11 @@ class AudioController {
 
   void _listenToChangesInSong() {
     _audioHandler.mediaItem.listen((mediaItem) {
-      currentSongNotifier.value = mediaItem;
+      if (mediaItem == null) {
+        currentSongNotifier.value = null;
+      } else {
+        currentSongNotifier.value = SongModel.fromMediaItem(mediaItem);
+      }
     });
   }
 
@@ -176,7 +150,7 @@ class AudioController {
     }
   }
 
-  void skipToItem(MediaItem mediaItem) {
+  void skipToItem(SongModel mediaItem) {
     if (playlistNotifier.value.isEmpty) return;
     _audioHandler.skipToQueueItem(playlistNotifier.value.indexOf(mediaItem));
   }
@@ -216,9 +190,9 @@ class AudioController {
         'song': MediaItem(
           id: song.id, 
           title: song.title,
-          artist: song.artists.join(""),
-          artUri: Uri.parse('${song.thumbnail}-w896-h896'),
-          duration: parseDuration(song.duration)
+          artist: song.artist,
+          artUri: song.artUri,
+          duration: song.duration
         ),
         'index': playlistNotifier.value.indexOf(currentSongNotifier.value!) + 1
       }
@@ -229,9 +203,9 @@ class AudioController {
     final mediaItem = MediaItem(
       id: song.id, 
       title: song.title,
-      artist: song.artists.join(""),
-      artUri: Uri.parse('${song.thumbnail}-w896-h896'),
-      duration: parseDuration(song.duration)
+      artist: song.artist,
+      artUri: song.artUri,
+      duration: song.duration
     );
     _audioHandler.addQueueItem(mediaItem);
   }

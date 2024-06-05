@@ -1,131 +1,94 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:monophony/controllers/active_search_controller.dart';
 import 'package:monophony/controllers/audio_controller.dart';
 import 'package:monophony/controllers/mini_player_controller.dart';
 import 'package:monophony/controllers/selected_song_controller.dart';
 import 'package:monophony/models/song_model.dart';
-import 'package:monophony/services/get_songs.dart';
+import 'package:monophony/innertube/get_songs.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/utils/create_route.dart';
 import 'package:monophony/views/search_page.dart';
 import 'package:monophony/widgets/my_text_field.dart';
 import 'package:monophony/widgets/song_tile.dart';
 
-class SongResultsPage extends StatefulWidget {
+class SongResultsPage extends ConsumerStatefulWidget {
   const SongResultsPage({super.key});
 
+  static final ActiveSearchController activeSearchController = getIt<ActiveSearchController>();
+  static final AudioController audioController = getIt<AudioController>();
+  static final SelectedSongController selectedSongController = getIt<SelectedSongController>();
+  static final MyMiniPlayerController miniPlayerController = getIt<MyMiniPlayerController>();
+  static final TextEditingController controller = TextEditingController();
 
   @override
-  State<SongResultsPage> createState() => _SongResultsPageState();
+  ConsumerState<SongResultsPage> createState() => _SongResultsPageState();
 }
 
-class _SongResultsPageState extends State<SongResultsPage> with AutomaticKeepAliveClientMixin {
-  late TextEditingController _controller;
-  late ActiveSearchController _activeSearchController;
-  late SelectedSongController _selectedSongController;
-  late MyMiniPlayerController _miniPlayerController;
-  late AudioController _audioController;
-  bool _networkError = false;
-  bool _loading = true;
-  List<SongModel> _songsResults = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _activeSearchController = getIt<ActiveSearchController>();
-    _selectedSongController = getIt<SelectedSongController>();
-    _miniPlayerController = getIt<MyMiniPlayerController>();
-    _audioController = getIt<AudioController>();
-    _controller = TextEditingController();
-    _controller.text = _activeSearchController.activeSearchNotifier.value;
-    
-    if (_activeSearchController.activeSearchNotifier.value != '') {
-      fetchSongs();
-    }
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void fetchSongs() async {
-    try {
-      final result = await getSongs(_activeSearchController.activeSearchNotifier.value);
-      setState(() {
-        _loading = false;
-        _networkError = false;
-        _songsResults = result;
-      });
-    } catch (e) {
-      setState(() {
-        _loading = false;
-        _networkError = true;
-      });
-    }
-  }
-
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
+class _SongResultsPageState extends ConsumerState<SongResultsPage> with AutomaticKeepAliveClientMixin {
+@override
   Widget build(BuildContext context) {
-    super.build(context);
+    super.build(context);    
+    SongResultsPage.controller.text = SongResultsPage.activeSearchController.activeSearchNotifier.value;
+    
+    final AsyncValue<List<SongModel>> songsResults = ref.watch(getSongsProvider(SongResultsPage.activeSearchController.activeSearchNotifier.value));
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-    if (_loading) return const CircularProgressIndicator();
-    if (_networkError) return const Text('Ha ocurrido un error');
-    if (_songsResults.isEmpty) return const Text('Ninguna coincidencia');
-    return ListView.builder(
-      padding: EdgeInsets.zero,
-      itemCount: _songsResults.length + 1,
-      itemBuilder: (context, index) {
-        if (index == 0) {
-          return Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pushAndRemoveUntil(createRoute(const MySearchPage()), ModalRoute.withName("/"));
-                  },
-                  child: MyTextField(
-                    controller: _controller,
-                    readOnly: true,
-                    enabled: false,
+    return songsResults.when(
+      data: (songsResults) {
+        return ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: songsResults.length + 1,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushAndRemoveUntil(createRoute(const MySearchPage()), ModalRoute.withName("/"));
+                      },
+                      child: MyTextField(
+                        controller: SongResultsPage.controller,
+                        readOnly: true,
+                        enabled: false,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(height: 48.0,)
-            ],
-          );
-        }
-        
-        index -= 1;
-        
-        return SongTile(
-          song: _songsResults[index],
-          onTap: () {
-            if (_selectedSongController.selectedSongNotifier.value != null) {
-              _audioController.stop();
-              _audioController.seek(Duration.zero);
-              _miniPlayerController.controller.animateToHeight(height: MediaQuery.of(context).size.height, duration: Durations.medium2);
+                  const SizedBox(height: 48.0,)
+                ],
+              );
             }
-            _selectedSongController.setActiveSong(_songsResults[index]);
-            _miniPlayerController.dragDownPercentageNotifier.value = 0;
-            _audioController.init();
-          },
-          onLongPress: () {
-            showSongDetails(index);
+            
+            index -= 1;
+            
+            return SongTile(
+              song: songsResults[index],
+              onTap: () {
+                if (SongResultsPage.selectedSongController.selectedSongNotifier.value != null) {
+                  SongResultsPage.audioController.stop();
+                  SongResultsPage.audioController.seek(Duration.zero);
+                  SongResultsPage.miniPlayerController.controller.animateToHeight(height: MediaQuery.of(context).size.height, duration: Durations.medium2);
+                }
+                SongResultsPage.selectedSongController.setActiveSong(songsResults[index]);
+                SongResultsPage.miniPlayerController.dragDownPercentageNotifier.value = 0;
+                SongResultsPage.audioController.init();
+              },
+              onLongPress: () {
+                showSongDetails(songsResults, index);
+              },
+            );
           },
         );
       },
+      error: (error, stackTrace) => Text('Ocurrió un error: $error'),
+      loading: () => const CircularProgressIndicator(),
     );
   }
 
-  Future<dynamic> showSongDetails(int index) {
+  Future<dynamic> showSongDetails(List<SongModel> songsResults, int index) {
     return showModalBottomSheet(
       context: getIt<GlobalKey<ScaffoldState>>().currentContext!,
       isScrollControlled: true,
@@ -144,36 +107,42 @@ class _SongResultsPageState extends State<SongResultsPage> with AutomaticKeepAli
                       ClipRRect(
                         borderRadius: BorderRadius.circular(6.0),
                         child: CachedNetworkImage(
-                          imageUrl: _songsResults[index].thumbnail,
+                          imageUrl: songsResults[index].artUri.toString(),
                           height: 58.0,
                           width: 58.0,
                         ),
                       ),
                       const SizedBox(width: 12.0,),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _songsResults[index].title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 14
-                            ),
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.only(right: 60.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                songsResults[index].title,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                softWrap: true,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14
+                                ),
+                              ),
+                              Text(
+                                songsResults[index].artist ?? '',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(context).colorScheme.secondary,
+                                  fontSize: 14
+                                ),
+                              )
+                            ],
                           ),
-                          Text(
-                            _songsResults[index].artists.join(""),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontSize: 14
-                            ),
-                          )
-                        ],
+                        ),
                       ),
                     ],
                   ),
@@ -200,7 +169,7 @@ class _SongResultsPageState extends State<SongResultsPage> with AutomaticKeepAli
                       child: IconButton(
                         onPressed: () {}, 
                         style: ButtonStyle(
-                          padding: MaterialStateProperty.all(EdgeInsets.zero)
+                          padding: WidgetStateProperty.all(EdgeInsets.zero)
                         ),
                         icon: const Icon(Icons.share_rounded),
                         iconSize: 18,
@@ -226,7 +195,7 @@ class _SongResultsPageState extends State<SongResultsPage> with AutomaticKeepAli
                 ),
                 ListTile(
                   onTap: () {
-                    _audioController.playNext(_songsResults[index]);
+                    SongResultsPage.audioController.playNext(songsResults[index]);
                     Navigator.pop(context);
                   },
                   leading: const Icon(Icons.skip_next_rounded),
@@ -240,7 +209,7 @@ class _SongResultsPageState extends State<SongResultsPage> with AutomaticKeepAli
                 ),
                 ListTile(
                   onTap: () {
-                    _audioController.add(_songsResults[index]);
+                    SongResultsPage.audioController.add(songsResults[index]);
                     Navigator.pop(context);
                   },
                   leading: const Icon(Icons.queue_music_rounded),
@@ -268,7 +237,7 @@ class _SongResultsPageState extends State<SongResultsPage> with AutomaticKeepAli
                     color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
-                for (final artist in _songsResults[index].artists.where((element) => element != ' & '))
+                for (final artist in songsResults[index].artistsList)
                 ListTile(
                   onTap: () {
                     Navigator.pop(context);
@@ -289,4 +258,7 @@ class _SongResultsPageState extends State<SongResultsPage> with AutomaticKeepAli
       },
     );
   }
+  
+  @override
+  bool get wantKeepAlive => true;
 }

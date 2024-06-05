@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:monophony/models/song_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:monophony/utils/print_duration.dart';
 
 class SongTile extends StatelessWidget {
   const SongTile({
@@ -32,7 +33,7 @@ class SongTile extends StatelessWidget {
         child: Stack(
           children: [
             CachedNetworkImage(
-              imageUrl: song.thumbnail,
+              imageUrl: song.artUri.toString(),
               height: 58.0,
               width: 58.0,
             ),
@@ -66,7 +67,7 @@ class SongTile extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  song.artists.join(""),
+                  song.artist!,
                   maxLines: 1,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
@@ -77,7 +78,7 @@ class SongTile extends StatelessWidget {
               ),
               const SizedBox(width: 5.0),
               Text(
-                song.duration,
+                printDuration(song.duration!),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.secondary,
                   fontWeight: FontWeight.w500,

@@ -2,26 +2,23 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miniplayer/miniplayer.dart';
-import 'package:monophony/controllers/active_search_controller.dart';
 import 'package:monophony/controllers/audio_controller.dart';
 import 'package:monophony/controllers/dominant_color_controller.dart';
 import 'package:monophony/controllers/fab_controller.dart';
-import 'package:monophony/controllers/mini_player_controller.dart';
 import 'package:monophony/controllers/view_controller.dart';
 import 'package:monophony/services/service_locator.dart';
-import 'package:monophony/utils/create_route.dart';
 import 'package:monophony/views/my_page_view.dart';
 import 'package:monophony/views/root_views.dart';
-import 'package:monophony/views/search_page.dart';
-import 'package:monophony/widgets/fabs/my_fab.dart';
+import 'package:monophony/widgets/fabs/search_fab.dart';
 import 'package:monophony/widgets/mini_players/my_mini_player.dart';
 import 'package:monophony/widgets/my_side_bar.dart';
 import 'package:monophony/widgets/options_button.dart';
 
 void main() async {
   await setupServiceLocator();
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -44,7 +41,7 @@ class _MyAppState extends State<MyApp> {
     dominantColor = dominantColorController.value;
     audioController.currentSongNotifier.addListener(() {
       final String url = audioController.currentSongNotifier.value!.artUri.toString();
-      dominantColorController.getImagePalette(CachedNetworkImageProvider('$url-w120-h120'));
+      dominantColorController.getImagePalette(CachedNetworkImageProvider('$url-w60-h60'));
     });
     dominantColorController.addListener(() {
       setState(() {
@@ -82,9 +79,6 @@ class MyRootPage extends StatelessWidget {
   static final ViewController _viewController = ViewController();
   static final PageController _pageController = PageController();
   static final FabController _fabController = FabController();
-  static final myMiniPlayerController = getIt<MyMiniPlayerController>();
-  static final activeSearchController = getIt<ActiveSearchController>();
-
 
   @override
   Widget build(BuildContext context) {
@@ -118,14 +112,7 @@ class MyRootPage extends StatelessWidget {
           )
         ],
       ),
-      floatingActionButton: MyFab(
-        showFabNotifier: _fabController.showFabNotifier, 
-        onPressed: () {
-          activeSearchController.setActiveSearch('');
-          Navigator.of(context).push(createRoute(const MySearchPage()));
-        },
-        child: const Icon(Icons.search)
-      ),
+      floatingActionButton: SearchFab(showFabNotifier: _fabController.showFabNotifier),
     );
   }
 }

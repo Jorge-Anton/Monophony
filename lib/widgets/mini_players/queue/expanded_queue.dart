@@ -1,4 +1,3 @@
-import 'package:audio_service/audio_service.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -8,8 +7,7 @@ import 'package:monophony/controllers/audio_controller.dart';
 import 'package:monophony/controllers/fab_controller.dart';
 import 'package:monophony/models/song_model.dart';
 import 'package:monophony/services/service_locator.dart';
-import 'package:monophony/utils/print_duration.dart';
-import 'package:monophony/widgets/fabs/my_fab.dart';
+import 'package:monophony/widgets/fabs/hide_on_scroll_fab.dart';
 import 'package:monophony/widgets/mini_players/queue/close_expanded_queue.dart';
 import 'package:monophony/widgets/song_tile.dart';
 
@@ -54,7 +52,7 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                     body: ValueListenableBuilder(
                       valueListenable: _audioController.currentSongNotifier,
                       builder: (context, value, child) {
-                        final List<MediaItem> playlist = _audioController.playlistNotifier.value;
+                        final List<SongModel> playlist = _audioController.playlistNotifier.value;
 
                         return NotificationListener<UserScrollNotification>(
                           onNotification: (notification) {
@@ -71,19 +69,13 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                             itemBuilder: (context, index) {
                               return SongTile(
                                 active: playlist[index] == _audioController.currentSongNotifier.value,
-                                song: SongModel(
-                                  title: playlist[index].title, 
-                                  artists: [playlist[index].artist!], 
-                                  thumbnail: '${playlist[index].artUri}-w120-h120', 
-                                  duration: printDuration(playlist[index].duration!), 
-                                  id: playlist[index].id
-                                ), 
+                                song: playlist[index],
                                 onTap: () {
                                   _audioController.skipToItem(playlist[index]);
                                   setState(() {});
                                 },
                                 onLongPress: () {
-                                  showSongDetails(playlist, index);
+                                  showSongDetails(playlist[index]);
                                 },
                               );
                             },
@@ -91,7 +83,7 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                         );
                       },
                     ),
-                    floatingActionButton: MyFab(
+                    floatingActionButton: HideOnScrollFab(
                       showFabNotifier: _fabController.showFabNotifier, 
                       onPressed: () {
                         _audioController.shuffle();
@@ -113,7 +105,7 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
               child: IconButton.filledTonal(
                 onPressed: () {},
                 style: ButtonStyle(
-                  shape: MaterialStateProperty.all(const RoundedRectangleBorder(borderRadius: BorderRadius.zero))
+                  shape: WidgetStateProperty.all(const RoundedRectangleBorder(borderRadius: BorderRadius.zero))
                 ),
                 icon: const Icon(Icons.queue_music_rounded)
               ),
@@ -124,7 +116,7 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
     );
   }
 
-  Future<void> showSongDetails(List<MediaItem> playlist, int index) {
+  Future<void> showSongDetails(SongModel song) {
     return showModalBottomSheet(
       context: getIt<GlobalKey<ScaffoldState>>().currentContext!,
       isScrollControlled: true,
@@ -143,7 +135,7 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(6.0),
                         child: CachedNetworkImage(
-                          imageUrl: '${playlist[index].artUri}-w120-h120',
+                          imageUrl: '${song.artUri}-w120-h120',
                           height: 58.0,
                           width: 58.0,
                         ),
@@ -157,7 +149,7 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                playlist[index].title,
+                                song.title,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 softWrap: true,
@@ -167,7 +159,7 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                                 ),
                               ),
                               Text(
-                                playlist[index].artist ?? '',
+                                song.artist ?? '',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -205,7 +197,7 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                       child: IconButton(
                         onPressed: () {}, 
                         style: ButtonStyle(
-                          padding: MaterialStateProperty.all(EdgeInsets.zero)
+                          padding: WidgetStateProperty.all(EdgeInsets.zero)
                         ),
                         icon: const Icon(Icons.share_rounded),
                         iconSize: 18,
@@ -250,8 +242,7 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                     ),
                   ),
                 ),
-                if (playlist[index].extras!['artists'] != null)
-                for (final artist in playlist[index].extras!['artists'].where((element) => element != ' & '))
+                for (final artist in song.artistsList)
                 ListTile(
                   onTap: () {
                     Navigator.pop(context);
@@ -265,10 +256,10 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                     ),
                   ),
                 ),
-                if (_audioController.currentSongNotifier.value != playlist[index])
+                if (_audioController.currentSongNotifier.value != song)
                 ListTile(
                   onTap: () {
-                    _audioController.remove(index);
+                    _audioController.remove(_audioController.playlistNotifier.value.indexOf(song));
                     Navigator.pop(context);
                     setState(() {});
                   },

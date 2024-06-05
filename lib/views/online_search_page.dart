@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:monophony/controllers/active_search_controller.dart';
-import 'package:monophony/services/get_search_suggestions.dart';
+import 'package:monophony/innertube/get_search_suggestions.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/utils/create_route.dart';
 import 'package:monophony/views/results_page.dart';
@@ -93,7 +93,7 @@ class _OnlineSearchPageState extends State<OnlineSearchPage> {
                 child: FilledButton.tonal(
                   style: ButtonStyle(
                     visualDensity: VisualDensity.compact,
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 15, vertical: 15)),
+                    padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 15, vertical: 15)),
                   ),
                   onPressed: () {
                     setState(() {
