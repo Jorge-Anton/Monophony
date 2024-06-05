@@ -14,7 +14,7 @@ class QueueMiniPlayer extends StatelessWidget {
       controller: _controller,
       minHeight: 60, 
       maxHeight: MediaQuery.of(context).size.height,
-      tapToCollapese: false,
+      tapToCollapse: false,
       builder: (height, percentage) {
         if (height <= 60) {
           return CollapsedQueue(controller: _controller,);

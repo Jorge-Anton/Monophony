@@ -51,8 +51,10 @@ class _MyMiniPlayerState extends State<MyMiniPlayer> {
             shouldExpand = true;
           },
           controller: myMiniplayerController.controller,
-          dragDownPercentage: myMiniplayerController.dragDownPercentageNotifier,
-          tapToCollapese: false,
+          onDragDown: (dragDownPercentage) {
+            myMiniplayerController.dragDownPercentageNotifier.value = dragDownPercentage;
+          },
+          tapToCollapse: false,
           curve: Curves.ease,
           duration: Durations.medium2,
           minHeight: 70, 

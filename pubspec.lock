@@ -284,11 +284,12 @@ packages:
   miniplayer:
     dependency: "direct main"
     description:
-      name: miniplayer
-      sha256: "6e12c27aef7432fc16508460a6dc824f3edfeb01761bd0dbfbccc84d516121bf"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
+      path: "."
+      ref: HEAD
+      resolved-ref: e005ec576d568c70a0ee5f809f0afaedb592f5a2
+      url: "https://github.com/Jorge-Anton/miniplayer.git"
+    source: git
+    version: "1.0.3"
   octo_image:
     dependency: transitive
     description:
