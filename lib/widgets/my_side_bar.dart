@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:monophony/controllers/view_controller.dart';
+import 'package:monophony/notifiers/view_notifier.dart';
 import 'package:monophony/models/destination_info_model.dart';
 
 class MySideBar extends StatelessWidget {
@@ -8,12 +8,12 @@ class MySideBar extends StatelessWidget {
     super.key, 
     required this.actionButton,
     required this.destinations,
-    required this.viewController
+    required this.viewNotifer
   });
 
   final Widget actionButton;
   final List<DestinationInfoModel> destinations;
-  final ViewController viewController;
+  final ViewNotifier viewNotifer;
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +33,14 @@ class MySideBar extends StatelessWidget {
           const SizedBox(height: 50.0),
           for (final destination in destinations)
           ValueListenableBuilder<int>(
-            valueListenable: viewController.activeViewNotifier, 
+            valueListenable: viewNotifer, 
             builder: (context, value, child) {
               return RotatedBox(
                 quarterTurns: 3,
                 child: TextButton(
                   onPressed: () {
                     final index = destinations.indexOf(destination);
-                    viewController.changeView(index);
+                    viewNotifer.changeView(index);
                   }, 
                   child: Column(
                     children: [

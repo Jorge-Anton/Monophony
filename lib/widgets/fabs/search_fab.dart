@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:monophony/controllers/active_search_controller.dart';
+import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/controllers/mini_player_controller.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/utils/create_route.dart';
@@ -15,7 +15,6 @@ class SearchFab extends StatelessWidget {
   final ValueNotifier<bool> showFabNotifier;
 
   static final myMiniPlayerController = getIt<MyMiniPlayerController>();
-  static final activeSearchController = getIt<ActiveSearchController>();
 
 
   @override
@@ -30,7 +29,8 @@ class SearchFab extends StatelessWidget {
           child: HideOnScrollFab(
             showFabNotifier: showFabNotifier, 
             onPressed: () {
-              activeSearchController.setActiveSearch('');
+              getIt<ActiveSearchNotifier>().setActiveSearch('');
+              // ref.read(activeSearchControllerProvider.notifier).setActiveSearch('');
               Navigator.push(context, createRoute(const MySearchPage()));
             },
             child: const Icon(Icons.search_rounded)

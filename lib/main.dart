@@ -2,12 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:monophony/controllers/audio_controller.dart';
-import 'package:monophony/controllers/dominant_color_controller.dart';
+import 'package:monophony/notifiers/dominant_color_controller.dart';
 import 'package:monophony/controllers/fab_controller.dart';
-import 'package:monophony/controllers/view_controller.dart';
+import 'package:monophony/notifiers/view_notifier.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/views/my_page_view.dart';
 import 'package:monophony/views/root_views.dart';
@@ -18,7 +17,7 @@ import 'package:monophony/widgets/options_button.dart';
 
 void main() async {
   await setupServiceLocator();
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -32,13 +31,14 @@ class _MyAppState extends State<MyApp> {
 
   final DraggableScrollableController sheetController = DraggableScrollableController();
   late Color dominantColor;
-  final DominantColorController dominantColorController = getIt<DominantColorController>();
+  final DominantColorNotifier dominantColorController = getIt<DominantColorNotifier>();
   final AudioController audioController = getIt<AudioController>();
   
   @override
   void initState() {
     super.initState();
     dominantColor = dominantColorController.value;
+    audioController.init();
     audioController.currentSongNotifier.addListener(() {
       final String url = audioController.currentSongNotifier.value!.artUri.toString();
       dominantColorController.getImagePalette(CachedNetworkImageProvider('$url-w60-h60'));
@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    getIt<AudioController>().dispose();
+    audioController.dispose();
     super.dispose();
   }
 
@@ -60,6 +60,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -76,7 +77,7 @@ class _MyAppState extends State<MyApp> {
 class MyRootPage extends StatelessWidget {
   const MyRootPage({super.key});
 
-  static final ViewController _viewController = ViewController();
+  static final ViewNotifier _viewNotifier = ViewNotifier();
   static final PageController _pageController = PageController();
   static final FabController _fabController = FabController();
 
@@ -89,7 +90,7 @@ class MyRootPage extends StatelessWidget {
         children: [
           MySideBar(
             actionButton: const OptionsButton(),
-            viewController: _viewController,
+            viewNotifer: _viewNotifier,
             destinations: rootDestinations,
           ),
           Expanded(
@@ -106,7 +107,7 @@ class MyRootPage extends StatelessWidget {
               child: MyPageView(
                 views: rootViews,
                 pageController: _pageController,
-                viewController: _viewController,
+                viewNotifier: _viewNotifier,
               ),
             )
           )

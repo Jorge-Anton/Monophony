@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:monophony/controllers/audio_controller.dart';
-import 'package:monophony/controllers/dominant_color_controller.dart';
+import 'package:monophony/notifiers/dominant_color_controller.dart';
 import 'package:monophony/controllers/mini_player_controller.dart';
-import 'package:monophony/controllers/selected_song_controller.dart';
+import 'package:monophony/notifiers/selected_song_notifier.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/widgets/mini_players/player/collapsed_player.dart';
 import 'package:monophony/widgets/mini_players/player/expanded_player.dart';
@@ -21,7 +21,7 @@ class _MyMiniPlayerState extends State<MyMiniPlayer> {
 
   late MyMiniPlayerController myMiniplayerController;
   late AudioController audioController;
-  late SelectedSongController selectedSongController;
+  late SelectedSongNotifier selectedSongNotifier;
   bool shouldExpand = true;
 
   @override
@@ -29,7 +29,7 @@ class _MyMiniPlayerState extends State<MyMiniPlayer> {
     super.initState();
     myMiniplayerController = getIt<MyMiniPlayerController>();
     audioController = getIt<AudioController>();
-    selectedSongController = getIt<SelectedSongController>();
+    selectedSongNotifier = getIt<SelectedSongNotifier>();
   }
 
   @override
@@ -41,15 +41,15 @@ class _MyMiniPlayerState extends State<MyMiniPlayer> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: selectedSongController.selectedSongNotifier,
+      valueListenable: selectedSongNotifier,
       builder: (context, value, child) {
         if (value == null) return const SizedBox.shrink();
         return Miniplayer(
           onDismiss: () {
             audioController.stop();
             audioController.seek(Duration.zero);
-            selectedSongController.clearActiveSong();
-            getIt<DominantColorController>().value = Colors.blue;
+            selectedSongNotifier.clearActiveSong();
+            getIt<DominantColorNotifier>().resetPalette();
             shouldExpand = true;
           },
           controller: myMiniplayerController.controller,

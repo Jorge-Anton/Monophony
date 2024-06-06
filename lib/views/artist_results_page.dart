@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:monophony/controllers/active_search_controller.dart';
+import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/models/artist_model.dart';
-import 'package:monophony/services/get_artists.dart';
+import 'package:monophony/innertube/get_artists.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/widgets/my_text_field.dart';
 
@@ -15,7 +15,7 @@ class ArtistResultsPage extends StatefulWidget {
 
 class _ArtistResultsPageState extends State<ArtistResultsPage> with AutomaticKeepAliveClientMixin {
   late TextEditingController _controller;
-  late ActiveSearchController _activeSearchController;
+  late ActiveSearchNotifier _activeSearchNotifier;
   bool _networkError = false;
   bool _loading = true;
   List<ArtistModel> _artistsResults = [];
@@ -23,9 +23,9 @@ class _ArtistResultsPageState extends State<ArtistResultsPage> with AutomaticKee
   @override
   void initState() {
     super.initState();
-    _activeSearchController = getIt<ActiveSearchController>();
+    _activeSearchNotifier = getIt<ActiveSearchNotifier>();
     _controller = TextEditingController();
-    _controller.text = _activeSearchController.activeSearchNotifier.value;
+    // _controller.text = _activeSearchController.activeSearchNotifier.value;
 
     fetchArtists();
   }
@@ -38,7 +38,7 @@ class _ArtistResultsPageState extends State<ArtistResultsPage> with AutomaticKee
 
   void fetchArtists() async {
     try {
-      final result = await getArtists(_activeSearchController.activeSearchNotifier.value);
+      final result = await getArtists(_activeSearchNotifier.value);
       setState(() {
         _loading = false;
         _networkError = false;
@@ -75,7 +75,7 @@ class _ArtistResultsPageState extends State<ArtistResultsPage> with AutomaticKee
                 padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
                 child: GestureDetector(
                   onTap: () {
-                    _activeSearchController.setActiveSearch(_controller.text);
+                    _activeSearchNotifier.setActiveSearch(_controller.text);
                   },
                   child: MyTextField(
                     controller: _controller,

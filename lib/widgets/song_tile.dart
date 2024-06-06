@@ -34,8 +34,8 @@ class SongTile extends StatelessWidget {
           children: [
             CachedNetworkImage(
               imageUrl: song.artUri.toString(),
-              height: 58.0,
-              width: 58.0,
+              height: 60,
+              width: 60,
             ),
             if (active)
             Positioned.fill(

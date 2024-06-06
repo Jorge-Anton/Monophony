@@ -35,7 +35,8 @@ class ExpandedPlayer extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(6.0),
                         child: CachedNetworkImage(
-                          imageUrl: '${value.artUri}-w896-h896',
+                          useOldImageOnUrlChange: true,
+                          imageUrl: '${value.artUri}-w480-h480',
                           placeholder: (context, url) {
                             return AspectRatio(
                               aspectRatio: 1,
@@ -122,7 +123,7 @@ class ExpandedPlayer extends StatelessWidget {
                                 },
                                 style: ButtonStyle(
                                   animationDuration: Durations.medium2,
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: value == ButtonState.paused ? BorderRadius.circular(16.0) : BorderRadius.circular(50.0)
                                     )

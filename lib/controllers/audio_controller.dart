@@ -1,17 +1,18 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
-import 'package:monophony/controllers/selected_song_controller.dart';
+import 'package:monophony/notifiers/selected_song_notifier.dart';
 import 'package:monophony/models/song_model.dart';
 import 'package:monophony/notifiers/play_button_notifier.dart';
 import 'package:monophony/notifiers/progress_notifier.dart';
 import 'package:monophony/notifiers/repeat_one_button_notifier.dart';
 import 'package:monophony/notifiers/repeat_playlist_button_notifier.dart';
-import 'package:monophony/services/get_queue.dart';
+import 'package:monophony/innertube/get_queue.dart';
 
 import '../services/service_locator.dart';
 
-class AudioController {
+
+class AudioController  {
   final currentSongNotifier = ValueNotifier<SongModel?>(null);
   final playlistNotifier = ValueNotifier<List<SongModel>>([]);
   final progressNotifier = ProgressNotifier();
@@ -25,7 +26,7 @@ class AudioController {
   void init() async {
     final session = await AudioSession.instance;
     await session.configure(const AudioSessionConfiguration.music());
-    await _loadPlaylist();
+    // await _loadPlaylist();
     _listenToChangesInPlaylist();
     _listenToPlaybackState();
     _listenToCurrentPosition();
@@ -34,16 +35,13 @@ class AudioController {
     _listenToChangesInSong();
   }
 
-  void loadNewQueue() async {
-    await _audioHandler.stop();
-    await _audioHandler.seek(Duration.zero);
-    init();
-  }
-
-  Future<void> _loadPlaylist() async {
+  Future<void> loadPlaylist() async {
+    await stop();
+    seek(Duration.zero);
     await _audioHandler.customAction('clear');
-    final selectedSongController = getIt<SelectedSongController>();
-    final firstSong = selectedSongController.selectedSongNotifier.value;
+    final SelectedSongNotifier selectedSongNotifier = getIt<SelectedSongNotifier>();
+    final firstSong = selectedSongNotifier.value;
+    
     if (firstSong != null) {
       await _audioHandler.addQueueItem(firstSong);
 
@@ -61,8 +59,6 @@ class AudioController {
       playlistNotifier.value = playlist.map((item) => SongModel.fromMediaItem(item)).toList();
     });
   }
-
-
 
   void _listenToPlaybackState() {
     _audioHandler.playbackState.listen((playbackState) {
@@ -228,7 +224,7 @@ class AudioController {
     _audioHandler.customAction('dispose');
   }
 
-  void stop() {
-    _audioHandler.stop();
+  Future<void> stop() async {
+    await _audioHandler.stop();
   }
 }

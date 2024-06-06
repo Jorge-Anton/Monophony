@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:monophony/controllers/active_search_controller.dart';
+import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/innertube/get_search_suggestions.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/utils/create_route.dart';
@@ -17,7 +17,7 @@ class OnlineSearchPage extends StatefulWidget {
 
 class _OnlineSearchPageState extends State<OnlineSearchPage> {
   late TextEditingController _controller;
-  late ActiveSearchController _activeSearchController;
+  late ActiveSearchNotifier _activeSearchNotifier;
   Timer? _debounce;
   final int _debounceTime = 250;
   List<String> _searchResults = [];
@@ -26,8 +26,8 @@ class _OnlineSearchPageState extends State<OnlineSearchPage> {
   @override
   void initState() {
     super.initState();
-    _activeSearchController = getIt<ActiveSearchController>();
-    _controller = TextEditingController(text: _activeSearchController.activeSearchNotifier.value);
+    _activeSearchNotifier = getIt<ActiveSearchNotifier>();
+    _controller = TextEditingController(text: _activeSearchNotifier.value);
     _controller.addListener(onQueryChanged);
   }
 
@@ -63,12 +63,12 @@ class _OnlineSearchPageState extends State<OnlineSearchPage> {
         });
       }
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
+    // _controller.text = ref.watch(activeSearchControllerProvider);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -78,7 +78,8 @@ class _OnlineSearchPageState extends State<OnlineSearchPage> {
               controller: _controller,
               autofocus: true,
               onSubmitted: (value) {
-                _activeSearchController.setActiveSearch(value);
+                // ref.read(activeSearchControllerProvider.notifier).setActiveSearch(value);
+                _activeSearchNotifier.setActiveSearch(value);
                 Navigator.of(context).pushAndRemoveUntil(createRoute(const ResultsPage()), ModalRoute.withName("/"));
               },
               hintText: 'Busca algo',
@@ -131,7 +132,8 @@ class _OnlineSearchPageState extends State<OnlineSearchPage> {
                   ],
                 ),
                 onTap: () {
-                  _activeSearchController.setActiveSearch(item);
+                  // ref.read(activeSearchControllerProvider.notifier).setActiveSearch(item);
+                  _activeSearchNotifier.setActiveSearch(item);
                   Navigator.of(context).pushAndRemoveUntil(createRoute(const ResultsPage()), ModalRoute.withName("/"));
                 },
                 title: Text(

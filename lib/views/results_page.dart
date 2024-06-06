@@ -1,37 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:monophony/controllers/view_controller.dart';
+import 'package:monophony/notifiers/view_notifier.dart';
 import 'package:monophony/views/my_page_view.dart';
 import 'package:monophony/views/result_views.dart';
 import 'package:monophony/widgets/my_back_button.dart';
 import 'package:monophony/widgets/my_side_bar.dart';
 
-class ResultsPage extends StatefulWidget {
+class ResultsPage extends StatelessWidget {
   const ResultsPage({super.key});
 
-  // static final ViewController _viewController = ViewController();
-  // static final PageController _pageController = PageController();
-
-  @override
-  State<ResultsPage> createState() => _ResultsPageState();
-}
-
-class _ResultsPageState extends State<ResultsPage> {
-  late ViewController _viewController;
-  late PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _viewController = ViewController();
-    _pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    _viewController.dispose();
-    super.dispose();
-  }
+  static final ViewNotifier _viewNotifier = ViewNotifier();
+  static final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +21,11 @@ class _ResultsPageState extends State<ResultsPage> {
           MySideBar(
             actionButton: const MyBackButton(), 
             destinations: resultDestinations, 
-            viewController: _viewController
+            viewNotifer: _viewNotifier
           ),
           Expanded(
             child: MyPageView(
-              viewController: _viewController, 
+              viewNotifier: _viewNotifier, 
               pageController: _pageController, 
               views: resultViews
             )

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:monophony/controllers/view_controller.dart';
+import 'package:monophony/notifiers/view_notifier.dart';
 
 class MyPageView extends StatelessWidget {
   const MyPageView({
     super.key,
     required this.views,
     required this.pageController,
-    required this.viewController
+    required this.viewNotifier
   });
 
-  final ViewController viewController;
+  final ViewNotifier viewNotifier;
   final List<Widget> views;
   final PageController pageController;
 
@@ -68,7 +68,7 @@ class MyPageView extends StatelessWidget {
     }
 
     return ValueListenableBuilder(
-      valueListenable: viewController.activeViewNotifier, 
+      valueListenable: viewNotifier, 
       builder: (context, value, child) {
         if (!firstTime) {
           flashToPage(value);
