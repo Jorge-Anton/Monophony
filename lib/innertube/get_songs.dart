@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:monophony/models/song_model.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+part 'get_songs.g.dart';
 
-Future<List<SongModel>> getSongs(String query) async {
+@Riverpod(keepAlive: true)
+Future<List<SongModel>> getSongs(GetSongsRef ref, String query) async {
   List<SongModel> result = [];
   if (query == '') return result;
 
@@ -28,15 +31,22 @@ Future<List<SongModel>> getSongs(String query) async {
     headers: headers
   );
 
-  if (res.statusCode == 200) {
-    final json = jsonDecode(res.body);
-    for (final song in json["contents"]["tabbedSearchResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][1]["musicShelfRenderer"]["contents"]) {
-      
-      result.add(SongModel.fromSearchJson(song));
-    }
-    return result;
-  } else {
-    throw Exception('Network Error');
+  final json = jsonDecode(res.body);
+  for (final song in json["contents"]["tabbedSearchResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][1]["musicShelfRenderer"]["contents"]) {
+    
+    result.add(SongModel.fromSearchJson(song));
   }
+  return result;
+
+  // if (res.statusCode == 200) {
+  //   final json = jsonDecode(res.body);
+  //   for (final song in json["contents"]["tabbedSearchResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][1]["musicShelfRenderer"]["contents"]) {
+      
+  //     result.add(SongModel.fromSearchJson(song));
+  //   }
+  //   return result;
+  // } else {
+  //   throw Exception('Network Error');
+  // }
 
 }

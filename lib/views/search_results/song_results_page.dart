@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/controllers/audio_controller.dart';
@@ -9,88 +10,83 @@ import 'package:monophony/models/song_model.dart';
 import 'package:monophony/innertube/get_songs.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/utils/create_route.dart';
-import 'package:monophony/views/search_page.dart';
+import 'package:monophony/views/search/search_page.dart';
 import 'package:monophony/widgets/my_text_field.dart';
 import 'package:monophony/widgets/song_tile.dart';
 
-class SongResultsPage extends StatefulWidget {
+class SongResultsPage extends ConsumerStatefulWidget {
   const SongResultsPage({super.key});
 
-  static final AudioController audioController = getIt<AudioController>();
-  static final SelectedSongNotifier selectedSongNotifier = getIt<SelectedSongNotifier>();
-  static final MyMiniPlayerController miniPlayerController = getIt<MyMiniPlayerController>();
+  static final AudioController _audioController = getIt<AudioController>();
+  static final SelectedSongNotifier _selectedSongNotifier = getIt<SelectedSongNotifier>();
+  static final MyMiniPlayerController _miniPlayerController = getIt<MyMiniPlayerController>();
+  static final ActiveSearchNotifier _activeSearchNotifier = getIt<ActiveSearchNotifier>();
  
-
   @override
-  State<SongResultsPage> createState() => _SongResultsPageState();
+  ConsumerState<SongResultsPage> createState() => _SongResultsPageState();
 }
 
-class _SongResultsPageState extends State<SongResultsPage> with AutomaticKeepAliveClientMixin {
-  final ActiveSearchNotifier _activeSearchNotifier = getIt<ActiveSearchNotifier>();
-  late Future<List<SongModel>> _songResults;
-  late TextEditingController _controller;
+class _SongResultsPageState extends ConsumerState<SongResultsPage> {
+  final TextEditingController _controller = TextEditingController(text: SongResultsPage._activeSearchNotifier.value);
   
   @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: _activeSearchNotifier.value);
-    _songResults = getSongs(_activeSearchNotifier.value);
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-    return FutureBuilder<List<SongModel>>(
-      future: _songResults,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final songsResults = snapshot.data!;
-          return ListView.builder(
-            padding: EdgeInsets.zero,
-            itemCount: songsResults.length + 1,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return Column(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).pushAndRemoveUntil(createRoute(const MySearchPage()), ModalRoute.withName("/"));
-                        },
-                        child: MyTextField(
-                          controller: _controller,
-                          readOnly: true,
-                          enabled: false,
-                        ),
+    final AsyncValue<List<SongModel>> songResults = ref.watch(getSongsProvider(SongResultsPage._activeSearchNotifier.value));
+    return songResults.when(
+      data: (result) {
+        return ListView.builder(
+          padding: EdgeInsets.zero,
+          itemCount: result.length + 1,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushAndRemoveUntil(createRoute(const MySearchPage()), ModalRoute.withName("/"));
+                      },
+                      child: MyTextField(
+                        controller: _controller,
+                        readOnly: true,
+                        enabled: false,
                       ),
                     ),
-                    const SizedBox(height: 48.0,)
-                  ],
-                );
-              }
-              
-              index -= 1;
-              
-              return SongTile(
-                song: songsResults[index],
-                onTap: () {
-                  SongResultsPage.selectedSongNotifier.setActiveSong(songsResults[index]);
-                  SongResultsPage.miniPlayerController.dragDownPercentageNotifier.value = 0;
-                  SongResultsPage.audioController.loadPlaylist();
-                  if (SongResultsPage.selectedSongNotifier.value != null) {
-                    SongResultsPage.miniPlayerController.controller.animateToHeight(height: MediaQuery.of(context).size.height, duration: Durations.medium2);
-                  }
-                },
-                onLongPress: () {
-                  showSongDetails(songsResults, index);
-                },
+                  ),
+                  const SizedBox(height: 48.0,)
+                ],
               );
-            },
-          );
-        }
-        if (snapshot.hasError) return Text(snapshot.error.toString());
+            }
+        
+            index -= 1;
+        
+            return SongTile(
+              song: result[index],
+              onTap: () {
+                SongResultsPage._selectedSongNotifier.setActiveSong(result[index]);
+                SongResultsPage._miniPlayerController.dragDownPercentageNotifier.value = 0;
+                SongResultsPage._audioController.loadPlaylist();
+                if (SongResultsPage._selectedSongNotifier.value != null) {
+                  SongResultsPage._miniPlayerController.controller.animateToHeight(height: MediaQuery.of(context).size.height, duration: Durations.medium2);
+                }
+              },
+              onLongPress: () {
+                showSongDetails(result, index);
+              },
+            );
+          },
+        );
+      },
+      error: (error, stackTrace) => Text(error.toString()), 
+      loading: () {
         return Column(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -114,8 +110,7 @@ class _SongResultsPageState extends State<SongResultsPage> with AutomaticKeepAli
             )
           ],
         );
-
-      },
+      }
     );
   }
 
@@ -226,7 +221,7 @@ class _SongResultsPageState extends State<SongResultsPage> with AutomaticKeepAli
                 ),
                 ListTile(
                   onTap: () {
-                    SongResultsPage.audioController.playNext(songsResults[index]);
+                    SongResultsPage._audioController.playNext(songsResults[index]);
                     Navigator.pop(context);
                   },
                   leading: const Icon(Icons.skip_next_rounded),
@@ -240,7 +235,7 @@ class _SongResultsPageState extends State<SongResultsPage> with AutomaticKeepAli
                 ),
                 ListTile(
                   onTap: () {
-                    SongResultsPage.audioController.add(songsResults[index]);
+                    SongResultsPage._audioController.add(songsResults[index]);
                     Navigator.pop(context);
                   },
                   leading: const Icon(Icons.queue_music_rounded),
@@ -289,7 +284,4 @@ class _SongResultsPageState extends State<SongResultsPage> with AutomaticKeepAli
       },
     );
   }
-  
-  @override
-  bool get wantKeepAlive => true;
 }

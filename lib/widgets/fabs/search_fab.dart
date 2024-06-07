@@ -3,7 +3,7 @@ import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/controllers/mini_player_controller.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/utils/create_route.dart';
-import 'package:monophony/views/search_page.dart';
+import 'package:monophony/views/search/search_page.dart';
 import 'package:monophony/widgets/fabs/hide_on_scroll_fab.dart';
 
 class SearchFab extends StatelessWidget {

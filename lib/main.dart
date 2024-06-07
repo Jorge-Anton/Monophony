@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:monophony/controllers/audio_controller.dart';
 import 'package:monophony/notifiers/dominant_color_controller.dart';
@@ -17,7 +18,7 @@ import 'package:monophony/widgets/options_button.dart';
 
 void main() async {
   await setupServiceLocator();
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {

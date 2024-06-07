@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:monophony/notifiers/view_notifier.dart';
 import 'package:monophony/views/my_page_view.dart';
-import 'package:monophony/views/search_views.dart';
+import 'package:monophony/views/search_results/result_views.dart';
 import 'package:monophony/widgets/my_back_button.dart';
 import 'package:monophony/widgets/my_side_bar.dart';
 
-class MySearchPage extends StatelessWidget {
-  const MySearchPage({super.key});
-  static final ViewNotifier _viewNotifier = ViewNotifier();
-  static final PageController _pageController = PageController();
+class ResultsPage extends StatelessWidget {
+  const ResultsPage({super.key});
+
 
   @override
   Widget build(BuildContext context) {
+    final ViewNotifier viewNotifier = ViewNotifier();
+    final PageController pageController = PageController();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Row(
@@ -19,14 +20,14 @@ class MySearchPage extends StatelessWidget {
         children: [
           MySideBar(
             actionButton: const MyBackButton(), 
-            destinations: searchDestinations, 
-            viewNotifer: _viewNotifier
+            destinations: resultDestinations, 
+            viewNotifer: viewNotifier
           ),
           Expanded(
             child: MyPageView(
-              views: searchViews, 
-              pageController: _pageController, 
-              viewNotifier: _viewNotifier
+              viewNotifier: viewNotifier, 
+              pageController: pageController, 
+              views: resultViews
             )
           )
         ],

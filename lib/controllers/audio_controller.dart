@@ -183,13 +183,7 @@ class AudioController  {
     _audioHandler.customAction(
       'play next', 
       {
-        'song': MediaItem(
-          id: song.id, 
-          title: song.title,
-          artist: song.artist,
-          artUri: song.artUri,
-          duration: song.duration
-        ),
+        'song': song,
         'index': playlistNotifier.value.indexOf(currentSongNotifier.value!) + 1
       }
     );

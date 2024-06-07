@@ -5,7 +5,7 @@ import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/innertube/get_search_suggestions.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/utils/create_route.dart';
-import 'package:monophony/views/results_page.dart';
+import 'package:monophony/views/search_results/results_page.dart';
 import 'package:monophony/widgets/my_text_field.dart';
 
 class OnlineSearchPage extends StatefulWidget {

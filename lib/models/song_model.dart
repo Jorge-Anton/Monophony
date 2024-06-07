@@ -64,7 +64,7 @@ class SongModel extends MediaItem {
       artistsList: artist.where((e) => e != ' & ' && e != ', ').toList(), 
       extras: {'artistsList': artist.where((e) => e != ' & ' && e != ', ').toList()},
       artUri: artUri, 
-      duration: duration
+      duration: duration,
     );
   }
 

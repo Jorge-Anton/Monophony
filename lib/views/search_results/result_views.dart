@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:monophony/models/destination_info_model.dart';
-import 'package:monophony/views/artist_results_page.dart';
-import 'package:monophony/views/song_results_page.dart';
+import 'package:monophony/views/search_results/artist_results_page.dart';
+import 'package:monophony/views/search_results/song_results_page.dart';
 
 final List<Widget> resultViews = [
   const SongResultsPage(),
