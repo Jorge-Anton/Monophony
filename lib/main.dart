@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:monophony/controllers/audio_controller.dart';
+import 'package:monophony/controllers/scaffold_controller.dart';
 import 'package:monophony/notifiers/dominant_color_controller.dart';
 import 'package:monophony/controllers/fab_controller.dart';
 import 'package:monophony/notifiers/view_notifier.dart';
@@ -85,6 +86,7 @@ class MyRootPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: getIt<ScaffoldController>().generalScaffoldKey,
       resizeToAvoidBottomInset: false,
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -135,7 +137,7 @@ class OverlayPage extends StatelessWidget {
         return false;
       },
       child: Scaffold(
-        key: getIt<GlobalKey<ScaffoldState>>(),
+        key: getIt<ScaffoldController>().overlayScaffoldKey,
         resizeToAvoidBottomInset: false,
         body: Stack(
           children: <Widget>[

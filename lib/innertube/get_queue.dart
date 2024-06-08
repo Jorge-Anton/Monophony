@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:brotli/brotli.dart';
 import 'package:monophony/models/song_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,7 +10,7 @@ Future<List<SongModel>> getQueue(String songId) async {
   final headers = {
     'Accept': 'application/json',
     'accept-charset': 'UTF-8',
-    'accept-encoding': 'gzip',
+    'accept-encoding': 'br',
     'conection': 'Keep-Alive',
     'content-type': 'application/json',
     'host': 'music.youtube.com',
@@ -27,7 +28,8 @@ Future<List<SongModel>> getQueue(String songId) async {
   );
 
   if (response1.statusCode == 200) {
-    final json = jsonDecode(response1.body);
+    final decodedBr = brotli.decodeToString(response1.bodyBytes, encoding: const Utf8Codec());
+    final json = jsonDecode(decodedBr);
     final String playlistId = json["contents"]["singleColumnMusicWatchNextResultsRenderer"]["tabbedRenderer"]["watchNextTabbedResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["musicQueueRenderer"]["content"]["playlistPanelRenderer"]["contents"][1]["automixPreviewVideoRenderer"]["content"]["automixPlaylistVideoRenderer"]["navigationEndpoint"]["watchPlaylistEndpoint"]["playlistId"];
 
     final body = '''{"context":{"client":{"clientName":"WEB_REMIX","clientVersion":"1.20220918","platform":"DESKTOP","hl":"en","visitorData":"CgtEUlRINDFjdm1YayjX1pSaBg%3D%3D"}},"videoId":"$songId","isAudioOnly":true,"playlistId":"$playlistId","tunerSettingValue":"AUTOMIX_SETTING_NORMAL","params":"wAEB8gECeAHqBAt4SHhhYTJwZExERQ%3D%3D","watchEndpointMusicSupportedConfigs":{"musicVideoType":"MUSIC_VIDEO_TYPE_ATV"}}''';
@@ -38,7 +40,8 @@ Future<List<SongModel>> getQueue(String songId) async {
     );
 
     if (response2.statusCode == 200) {
-      final json = jsonDecode(response2.body);
+      final decodedBr = brotli.decodeToString(response2.bodyBytes, encoding: const Utf8Codec());
+      final json = jsonDecode(decodedBr);
       for (final song in json["contents"]["singleColumnMusicWatchNextResultsRenderer"]["tabbedRenderer"]["watchNextTabbedResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["musicQueueRenderer"]["content"]["playlistPanelRenderer"]["contents"]) {
         result.add(SongModel.fromNextJson(song));
       }

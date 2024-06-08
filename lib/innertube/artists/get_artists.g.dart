@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'get_songs.dart';
+part of 'get_artists.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getSongsHash() => r'23564ad0f907c47aa07d16fb7261dac104435b35';
+String _$getArtistsHash() => r'982f9f991219d089e631022a08928e4e00012f1d';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,27 +29,27 @@ class _SystemHash {
   }
 }
 
-/// See also [getSongs].
-@ProviderFor(getSongs)
-const getSongsProvider = GetSongsFamily();
+/// See also [getArtists].
+@ProviderFor(getArtists)
+const getArtistsProvider = GetArtistsFamily();
 
-/// See also [getSongs].
-class GetSongsFamily extends Family<AsyncValue<List<SongModel>>> {
-  /// See also [getSongs].
-  const GetSongsFamily();
+/// See also [getArtists].
+class GetArtistsFamily extends Family<AsyncValue<List<ArtistModel>>> {
+  /// See also [getArtists].
+  const GetArtistsFamily();
 
-  /// See also [getSongs].
-  GetSongsProvider call(
+  /// See also [getArtists].
+  GetArtistsProvider call(
     String query,
   ) {
-    return GetSongsProvider(
+    return GetArtistsProvider(
       query,
     );
   }
 
   @override
-  GetSongsProvider getProviderOverride(
-    covariant GetSongsProvider provider,
+  GetArtistsProvider getProviderOverride(
+    covariant GetArtistsProvider provider,
   ) {
     return call(
       provider.query,
@@ -68,31 +68,32 @@ class GetSongsFamily extends Family<AsyncValue<List<SongModel>>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'getSongsProvider';
+  String? get name => r'getArtistsProvider';
 }
 
-/// See also [getSongs].
-class GetSongsProvider extends FutureProvider<List<SongModel>> {
-  /// See also [getSongs].
-  GetSongsProvider(
+/// See also [getArtists].
+class GetArtistsProvider extends FutureProvider<List<ArtistModel>> {
+  /// See also [getArtists].
+  GetArtistsProvider(
     String query,
   ) : this._internal(
-          (ref) => getSongs(
-            ref as GetSongsRef,
+          (ref) => getArtists(
+            ref as GetArtistsRef,
             query,
           ),
-          from: getSongsProvider,
-          name: r'getSongsProvider',
+          from: getArtistsProvider,
+          name: r'getArtistsProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$getSongsHash,
-          dependencies: GetSongsFamily._dependencies,
-          allTransitiveDependencies: GetSongsFamily._allTransitiveDependencies,
+                  : _$getArtistsHash,
+          dependencies: GetArtistsFamily._dependencies,
+          allTransitiveDependencies:
+              GetArtistsFamily._allTransitiveDependencies,
           query: query,
         );
 
-  GetSongsProvider._internal(
+  GetArtistsProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
@@ -106,12 +107,12 @@ class GetSongsProvider extends FutureProvider<List<SongModel>> {
 
   @override
   Override overrideWith(
-    FutureOr<List<SongModel>> Function(GetSongsRef provider) create,
+    FutureOr<List<ArtistModel>> Function(GetArtistsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: GetSongsProvider._internal(
-        (ref) => create(ref as GetSongsRef),
+      override: GetArtistsProvider._internal(
+        (ref) => create(ref as GetArtistsRef),
         from: from,
         name: null,
         dependencies: null,
@@ -123,13 +124,13 @@ class GetSongsProvider extends FutureProvider<List<SongModel>> {
   }
 
   @override
-  FutureProviderElement<List<SongModel>> createElement() {
-    return _GetSongsProviderElement(this);
+  FutureProviderElement<List<ArtistModel>> createElement() {
+    return _GetArtistsProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is GetSongsProvider && other.query == query;
+    return other is GetArtistsProvider && other.query == query;
   }
 
   @override
@@ -141,17 +142,17 @@ class GetSongsProvider extends FutureProvider<List<SongModel>> {
   }
 }
 
-mixin GetSongsRef on FutureProviderRef<List<SongModel>> {
+mixin GetArtistsRef on FutureProviderRef<List<ArtistModel>> {
   /// The parameter `query` of this provider.
   String get query;
 }
 
-class _GetSongsProviderElement extends FutureProviderElement<List<SongModel>>
-    with GetSongsRef {
-  _GetSongsProviderElement(super.provider);
+class _GetArtistsProviderElement
+    extends FutureProviderElement<List<ArtistModel>> with GetArtistsRef {
+  _GetArtistsProviderElement(super.provider);
 
   @override
-  String get query => (origin as GetSongsProvider).query;
+  String get query => (origin as GetArtistsProvider).query;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

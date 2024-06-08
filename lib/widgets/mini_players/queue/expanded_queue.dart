@@ -5,8 +5,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:monophony/controllers/audio_controller.dart';
 import 'package:monophony/controllers/fab_controller.dart';
+import 'package:monophony/controllers/mini_player_controller.dart';
+import 'package:monophony/controllers/scaffold_controller.dart';
 import 'package:monophony/models/song_model.dart';
 import 'package:monophony/services/service_locator.dart';
+import 'package:monophony/utils/create_route.dart';
+import 'package:monophony/views/artist/artist_page.dart';
 import 'package:monophony/widgets/fabs/hide_on_scroll_fab.dart';
 import 'package:monophony/widgets/mini_players/queue/close_expanded_queue.dart';
 import 'package:monophony/widgets/song_tile.dart';
@@ -118,7 +122,7 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
 
   Future<void> showSongDetails(SongModel song) {
     return showModalBottomSheet(
-      context: getIt<GlobalKey<ScaffoldState>>().currentContext!,
+      context: getIt<ScaffoldController>().overlayScaffoldKey.currentContext!,
       isScrollControlled: true,
       enableDrag: false,
       shape: const LinearBorder(),
@@ -246,6 +250,14 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                 ListTile(
                   onTap: () {
                     Navigator.pop(context);
+                    widget.controller.animateToHeight(height: 60);
+                    getIt<MyMiniPlayerController>().controller.animateToHeight(height: 70, duration: Durations.medium2);
+                    Navigator.push(
+                      getIt<ScaffoldController>().generalScaffoldKey.currentContext!, 
+                      createRoute(ArtistPage(artistId: song.artistsId[song.artistsList.indexOf(artist)], artistName: artist))
+                    );
+                    // Navigator.push(context, createRoute(ArtistPage(artistId: song.artistsId[song.artistsList.indexOf(artist)])));
+                    
                   },
                   leading: const Icon(Icons.person_rounded),
                   title: Text(

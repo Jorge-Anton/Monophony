@@ -28,7 +28,7 @@ class CloseExpandedQueue extends StatelessWidget {
               );
             }, 
             style: ButtonStyle(
-              shape: MaterialStateProperty.all(const RoundedRectangleBorder(borderRadius: BorderRadius.zero))
+              shape: WidgetStateProperty.all(const RoundedRectangleBorder(borderRadius: BorderRadius.zero))
             ),
             icon: const FaIcon(
               FontAwesomeIcons.chevronDown,

@@ -1,3 +1,6 @@
 import 'package:flutter/material.dart';
 
-final scaffoldKey = GlobalKey<ScaffoldState>();
+class ScaffoldController {
+  final overlayScaffoldKey = GlobalKey<ScaffoldState>();
+  final generalScaffoldKey = GlobalKey<ScaffoldState>();
+}

@@ -18,6 +18,7 @@ class ExpandedPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
       child: Container(
         height: MediaQuery.of(context).size.height,
         color: ElevationOverlay.applySurfaceTint(Theme.of(context).colorScheme.surface, Theme.of(context).colorScheme.surfaceTint, 3.0),

@@ -1,6 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:monophony/innertube/get_song_url.dart';
+import 'package:monophony/innertube/songs/get_song_url.dart';
 
 Future<AudioHandler> initAudioService() async {
   return await AudioService.init(

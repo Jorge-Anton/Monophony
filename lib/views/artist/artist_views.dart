@@ -3,8 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:monophony/models/destination_info_model.dart';
 import 'package:monophony/views/artist/over_view_page.dart';
 
-final List<Widget> artistViews = [
-  const OverViewPage(),
+List<Widget> artistViews({required String artistId, required String artistName}) => [
+  OverViewPage(artistId: artistId, artistName: artistName),
   const Center(
     child: Text('Canciones'),
   ),

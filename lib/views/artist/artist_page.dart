@@ -6,7 +6,14 @@ import 'package:monophony/widgets/my_back_button.dart';
 import 'package:monophony/widgets/my_side_bar.dart';
 
 class ArtistPage extends StatelessWidget {
-  const ArtistPage({super.key});
+  const ArtistPage({
+    super.key,
+    required this.artistName,
+    required this.artistId
+  });
+
+  final String artistName;
+  final String artistId;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +31,7 @@ class ArtistPage extends StatelessWidget {
           ),
           Expanded(
             child: MyPageView(
-              views: artistViews, 
+              views: artistViews(artistId: artistId, artistName: artistName), 
               pageController: pageController, 
               viewNotifier: viewNotifier
             )

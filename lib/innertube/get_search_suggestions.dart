@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:brotli/brotli.dart';
 import 'package:http/http.dart' as http;
 
 Future<List<String>> getSearchSuggestions(String query) async {
@@ -9,7 +10,7 @@ Future<List<String>> getSearchSuggestions(String query) async {
   final headers = {
     'Accept': 'application/json',
     'accept-charset': 'UTF-8',
-    'accept-encoding': 'gzip',
+    'accept-encoding': 'br',
     'conection': 'Keep-Alive',
     'content-type': 'application/json',
     'host': 'music.youtube.com',
@@ -27,7 +28,8 @@ Future<List<String>> getSearchSuggestions(String query) async {
   );
 
   if (res.statusCode == 200) {
-    final json = jsonDecode(res.body);
+    final decodedBr = brotli.decodeToString(res.bodyBytes, encoding: const Utf8Codec());
+    final json = jsonDecode(decodedBr);
     for (final i in json["contents"][0]["searchSuggestionsSectionRenderer"]["contents"]) {
       final suggestion = i["searchSuggestionRenderer"]["navigationEndpoint"]["searchEndpoint"]["query"];
       if (suggestion != null) {

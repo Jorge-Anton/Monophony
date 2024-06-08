@@ -44,10 +44,12 @@ class _OnlineSearchPageState extends State<OnlineSearchPage> {
       if (_controller.text != '') {
         try {
           final result = await getSearchSuggestions(_controller.text);
-          setState(() {
-            _networkError = false;
-            _searchResults = result;
-          });
+          if (mounted) {
+            setState(() {
+              _networkError = false;
+              _searchResults = result;
+            });
+          }
         } catch (e) {
           if (mounted) {
             setState(() {
@@ -68,7 +70,6 @@ class _OnlineSearchPageState extends State<OnlineSearchPage> {
   @override
   Widget build(BuildContext context) {
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-    // _controller.text = ref.watch(activeSearchControllerProvider);
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -78,7 +79,6 @@ class _OnlineSearchPageState extends State<OnlineSearchPage> {
               controller: _controller,
               autofocus: true,
               onSubmitted: (value) {
-                // ref.read(activeSearchControllerProvider.notifier).setActiveSearch(value);
                 _activeSearchNotifier.setActiveSearch(value);
                 Navigator.of(context).pushAndRemoveUntil(createRoute(const ResultsPage()), ModalRoute.withName("/"));
               },

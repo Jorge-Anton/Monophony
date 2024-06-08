@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:monophony/models/song_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:brotli/brotli.dart';
 
 part 'get_songs.g.dart';
 
@@ -14,7 +15,7 @@ Future<List<SongModel>> getSongs(GetSongsRef ref, String query) async {
   final headers = {
     'Accept': 'application/json',
     'accept-charset': 'UTF-8',
-    'accept-encoding': 'gzip',
+    'accept-encoding': 'br',
     'conection': 'Keep-Alive',
     'content-type': 'application/json',
     'host': 'music.youtube.com',
@@ -31,7 +32,9 @@ Future<List<SongModel>> getSongs(GetSongsRef ref, String query) async {
     headers: headers
   );
 
-  final json = jsonDecode(res.body);
+  final String decodedBr = brotli.decodeToString(res.bodyBytes, encoding: const Utf8Codec());
+
+  final json = jsonDecode(decodedBr);
   for (final song in json["contents"]["tabbedSearchResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][1]["musicShelfRenderer"]["contents"]) {
     
     result.add(SongModel.fromSearchJson(song));

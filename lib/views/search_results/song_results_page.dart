@@ -2,14 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:monophony/controllers/scaffold_controller.dart';
 import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/controllers/audio_controller.dart';
 import 'package:monophony/controllers/mini_player_controller.dart';
 import 'package:monophony/notifiers/selected_song_notifier.dart';
 import 'package:monophony/models/song_model.dart';
-import 'package:monophony/innertube/get_songs.dart';
+import 'package:monophony/innertube/songs/get_songs.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/utils/create_route.dart';
+import 'package:monophony/views/artist/artist_page.dart';
 import 'package:monophony/views/search/search_page.dart';
 import 'package:monophony/widgets/my_text_field.dart';
 import 'package:monophony/widgets/song_tile.dart';
@@ -116,7 +118,7 @@ class _SongResultsPageState extends ConsumerState<SongResultsPage> {
 
   Future<dynamic> showSongDetails(List<SongModel> songsResults, int index) {
     return showModalBottomSheet(
-      context: getIt<GlobalKey<ScaffoldState>>().currentContext!,
+      context: getIt<ScaffoldController>().overlayScaffoldKey.currentContext!,
       isScrollControlled: true,
       enableDrag: false,
       shape: const LinearBorder(),
@@ -266,7 +268,13 @@ class _SongResultsPageState extends ConsumerState<SongResultsPage> {
                 for (final artist in songsResults[index].artistsList)
                 ListTile(
                   onTap: () {
+                    final String artistId = songsResults[index].artistsId[songsResults[index].artistsList.indexOf(artist)];
                     Navigator.pop(context);
+                    Navigator.push(
+                      getIt<ScaffoldController>().generalScaffoldKey.currentContext!, 
+                      createRoute(ArtistPage(artistId: artistId, artistName: artist))
+                    );
+                    // Navigator.push(context, createRoute(ArtistPage(artistId: songsResults[index].artistsId[songsResults[index].artistsList.indexOf(artist)])));
                   },
                   leading: const Icon(Icons.person_rounded),
                   title: Text(

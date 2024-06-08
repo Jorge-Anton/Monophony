@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/controllers/audio_controller.dart';
@@ -17,6 +16,6 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<SelectedSongNotifier>(() => SelectedSongNotifier());
   getIt.registerSingleton<AudioHandler>(await initAudioService());
   getIt.registerLazySingleton<AudioController>(() => AudioController());
-  getIt.registerLazySingleton<GlobalKey<ScaffoldState>>(() => scaffoldKey);
+  getIt.registerLazySingleton<ScaffoldController>(() => ScaffoldController());
   getIt.registerLazySingleton<DominantColorNotifier>(() => DominantColorNotifier());
 }

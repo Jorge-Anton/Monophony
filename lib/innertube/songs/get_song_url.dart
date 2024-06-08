@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:brotli/brotli.dart';
 import 'package:http/http.dart' as http;
 
 Future<String> getSongUrl(String id) async {
   final headers = {
     'Accept': 'application/json',
     'accept-charset': 'UTF-8',
-    'accept-encoding': 'gzip',
+    'accept-encoding': 'br',
     'conection': 'Keep-Alive',
     'content-type': 'application/json',
     'host': 'music.youtube.com',
@@ -24,7 +25,8 @@ Future<String> getSongUrl(String id) async {
   );
 
   if (res.statusCode == 200) {
-    final rawJson = jsonDecode(res.body);
+    final decodedBr = brotli.decodeToString(res.bodyBytes, encoding: const Utf8Codec());
+    final rawJson = jsonDecode(decodedBr);
     final List parsedJson = rawJson["streamingData"]["adaptiveFormats"];
     final streamingData = parsedJson.lastWhere((element) => element["itag"] == 140);
     return streamingData["url"];

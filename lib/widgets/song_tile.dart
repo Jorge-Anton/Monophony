@@ -67,7 +67,7 @@ class SongTile extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  song.artist!,
+                  song.artist ?? '',
                   maxLines: 1,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.secondary,
@@ -77,6 +77,7 @@ class SongTile extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 5.0),
+              if (song.duration != null)
               Text(
                 printDuration(song.duration!),
                 style: TextStyle(

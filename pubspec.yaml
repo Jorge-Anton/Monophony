@@ -52,6 +52,8 @@ dependencies:
       url: https://github.com/Jorge-Anton/miniplayer
   flutter_riverpod: ^2.5.1
   riverpod_annotation: ^2.3.5
+  brotli: ^0.6.0
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +69,7 @@ dev_dependencies:
   build_runner: ^2.4.11
   custom_lint: ^0.6.4
   riverpod_lint: ^2.3.10
+  json_serializable: ^6.8.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,9 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/models/artist_model.dart';
-import 'package:monophony/innertube/get_artists.dart';
+import 'package:monophony/innertube/artists/get_artists.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/utils/create_route.dart';
 import 'package:monophony/views/artist/artist_page.dart';
@@ -65,7 +64,7 @@ class _ArtistResultsPageState extends ConsumerState<ArtistResultsPage> {
             return ArtistTile(
               artist: result[index],
               onTap: () {
-                Navigator.push(context, createRoute(const ArtistPage()));
+                Navigator.push(context, createRoute(ArtistPage(artistId: result[index].browseId, artistName: result[index].name,)));
               },
             );
           },
