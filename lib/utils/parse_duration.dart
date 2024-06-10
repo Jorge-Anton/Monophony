@@ -1,4 +1,5 @@
-Duration parseDuration(String duration) {
+Duration? parseDuration(String? duration) {
+  if (duration == null) return null;
   int hours = 0;
   int minutes = 0;
   int seconds = 0;

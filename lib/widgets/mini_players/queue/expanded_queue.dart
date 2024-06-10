@@ -139,7 +139,7 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(6.0),
                         child: CachedNetworkImage(
-                          imageUrl: '${song.artUri}-w120-h120',
+                          imageUrl: song.artUri.toString(),
                           height: 58.0,
                           width: 58.0,
                         ),

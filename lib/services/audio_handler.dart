@@ -34,12 +34,11 @@ class MyAudioHandler extends BaseAudioHandler {
     }
   }
 
-  ResolvingAudioSource _createAudioSource(MediaItem mediaItem) {
-    return ResolvingAudioSource(
-      uniqueId: mediaItem.id, 
+  LockCachingResolvingAudioSource _createAudioSource(MediaItem mediaItem) {
+    return LockCachingResolvingAudioSource(
+      uniqueId: mediaItem.id,
       tag: mediaItem,
       resolveSoundUrl: (uniquidId) async {
-        uniquidId = mediaItem.id;
         return Uri.parse(await getSongUrl(mediaItem.id));
       },
     );

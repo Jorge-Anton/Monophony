@@ -48,8 +48,10 @@ class AudioController  {
       play();
 
       final playlist = await getQueue(firstSong.id);
-      playlist.removeAt(0);
-      _audioHandler.addQueueItems(playlist);
+      if (playlist != null) {
+        playlist.removeAt(0);
+        _audioHandler.addQueueItems(playlist);
+      }
     }
   }
 

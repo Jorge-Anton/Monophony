@@ -485,7 +485,7 @@ packages:
     description:
       path: just_audio
       ref: HEAD
-      resolved-ref: "925e751658bd0dab0e2fa6140591a26f2fc2a007"
+      resolved-ref: "1dd7a5541b8d07005d908333d382906745985462"
       url: "https://github.com/Jorge-Anton/just_audio.git"
     source: git
     version: "0.9.39"
@@ -670,10 +670,10 @@ packages:
     dependency: transitive
     description:
       name: platform
-      sha256: "12220bb4b65720483f8fa9450b4332347737cf8213dd2840d8b2c823e47243ec"
+      sha256: "9b71283fc13df574056616011fb138fd3b793ea47cc509c189a6c3fa5f8a1a65"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.4"
+    version: "3.1.5"
   plugin_platform_interface:
     dependency: transitive
     description:

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:monophony/innertube/models/search_response.dart';
 import 'package:monophony/models/song_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:brotli/brotli.dart';
@@ -8,7 +9,7 @@ import 'package:brotli/brotli.dart';
 part 'get_songs.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<List<SongModel>> getSongs(GetSongsRef ref, String query) async {
+Future<List<SongModel>?> getSongs(GetSongsRef ref, String query) async {
   List<SongModel> result = [];
   if (query == '') return result;
 
@@ -34,12 +35,16 @@ Future<List<SongModel>> getSongs(GetSongsRef ref, String query) async {
 
   final String decodedBr = brotli.decodeToString(res.bodyBytes, encoding: const Utf8Codec());
 
-  final json = jsonDecode(decodedBr);
-  for (final song in json["contents"]["tabbedSearchResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][1]["musicShelfRenderer"]["contents"]) {
+  final SearchResponse json = SearchResponse.fromJson(jsonDecode(decodedBr));
+
+  return json.contents?.tabbedSearchResultsRenderer?.tabs?.first.tabRenderer?.content?.sectionListRenderer?.contents?.elementAtOrNull(1)?.musicShelfRenderer?.contents?.nonNulls.map((e) => e.musicResponsiveListItemRenderer).nonNulls.map((e) => SongModel.fromMusicResponsiveListItemRenderer(e)).toList();
+
+  // final json = jsonDecode(decodedBr);
+  // for (final song in json["contents"]["tabbedSearchResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][1]["musicShelfRenderer"]["contents"]) {
     
-    result.add(SongModel.fromSearchJson(song));
-  }
-  return result;
+  //   result.add(SongModel.fromSearchJson(song));
+  // }
+  // return result;
 
   // if (res.statusCode == 200) {
   //   final json = jsonDecode(res.body);

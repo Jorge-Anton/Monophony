@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:monophony/controllers/audio_controller.dart';
+import 'package:monophony/controllers/scaffold_controller.dart';
 import 'package:monophony/services/service_locator.dart';
 
 class CollapsedQueue extends StatelessWidget {
@@ -50,7 +51,7 @@ class CollapsedQueue extends StatelessWidget {
   Future<void> showSongDetails() {
     final song = audioController.currentSongNotifier.value;
     return showModalBottomSheet(
-      context: getIt<GlobalKey<ScaffoldState>>().currentContext!,
+      context: getIt<ScaffoldController>().overlayScaffoldKey.currentContext!,
       isScrollControlled: true,
       enableDrag: false,
       shape: const LinearBorder(),
@@ -67,7 +68,7 @@ class CollapsedQueue extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(6.0),
                         child: CachedNetworkImage(
-                          imageUrl: '${song!.artUri}-w120-h120',
+                          imageUrl: song!.artUri.toString(),
                           height: 58.0,
                           width: 58.0,
                         ),

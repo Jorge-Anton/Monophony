@@ -41,7 +41,7 @@ class CollapsedPlayer extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(6.0),
                             child: CachedNetworkImage(
-                              imageUrl: '${value.artUri}-w120-h120',
+                              imageUrl: value.artUri.toString(),
                               height: 58.0,
                               width: 58.0,  
                             ),

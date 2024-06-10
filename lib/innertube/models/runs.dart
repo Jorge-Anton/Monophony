@@ -12,7 +12,16 @@ class Runs {
   factory Runs.fromJson(Map<String, dynamic> json) => _$RunsFromJson(json);
   Map<String, dynamic> toJson() => _$RunsToJson(this);
 
-  String get text => runs.map((e) => e.text).toList().join();
+  String get text => runs.map((e) => e.text).join();
+
+  List<String> splitBySeparator () {
+    final List<String> result = [];
+    for (final run in runs) {
+      if (run.text == ' • ') break;
+      result.add(run.text ?? '');
+    }
+    return result;
+  }
 
 }
 

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:brotli/brotli.dart';
 import 'package:monophony/innertube/innertube.dart';
 import 'package:monophony/innertube/models/browse_response.dart';
+
+// ignore: library_prefixes
 import 'package:monophony/innertube/models/section_list_renderer.dart' as SectionListRenderer;
 import 'package:monophony/models/album_model.dart';
 import 'package:monophony/models/song_model.dart';
@@ -25,7 +27,7 @@ Future<ArtistPage> getArtistInfo(GetArtistInfoRef ref, String artistId) async {
     'x-goog-fieldmask': 'contents,header'
   };
 
-  final body = '''{"context":{"client":{"clientName":"WEB_REMIX","clientVersion":"1.20220918","platform":"DESKTOP","hl":"en","visitorData":"CgtEUlRINDFjdm1YayjX1pSaBg%3D%3D"}},"browseId":"$artistId"}''';
+  final body = '''{"context":{"client":{"clientName":"WEB_REMIX","clientVersion":"1.20220918","platform":"DESKTOP","hl":"es","visitorData":"CgtEUlRINDFjdm1YayjX1pSaBg%3D%3D"}},"browseId":"$artistId"}''';
 
   final res = await http.post(
     Uri.parse('https://music.youtube.com/youtubei/v1/browse?prettyPrint=false'),
@@ -44,18 +46,19 @@ Future<ArtistPage> getArtistInfo(GetArtistInfoRef ref, String artistId) async {
     return json.contents?.singleColumnBrowseResultsRenderer?.tabs?[0].tabRenderer?.content?.sectionListRenderer?.findSectionByTitle(text);
   }
 
-  final songsSection = findSectionByTitle("Songs")?.musicShelfRenderer;
-  final albumSection = findSectionByTitle("Albums")?.musicCarouselShelfRenderer;
-  final singlesSection = findSectionByTitle("Singles")?.musicCarouselShelfRenderer;
+  final songsSection = findSectionByTitle("Canciones")?.musicShelfRenderer;
+  final albumSection = findSectionByTitle("Álbumes")?.musicCarouselShelfRenderer;
+  final singlesSection = findSectionByTitle("Sencillos")?.musicCarouselShelfRenderer;
 
   String? rawDescription = json.header?.musicImmersiveHeaderRenderer?.description?.text;
   String? description;
   String? sourceDescription;
   if (rawDescription != null) {
-    if (rawDescription.contains('Wikipedia')) {
-      rawDescription.split('\n\n').removeLast();
-      description = rawDescription;
-      sourceDescription = rawDescription.split('\n\n').last.replaceAll(RegExp(r'\(([^\)]+)\)'), '');
+    if (rawDescription.contains('wikipedia')) {
+      final parts = rawDescription.split('\n\n');
+      parts.removeLast();
+      description = parts.join();
+      sourceDescription = rawDescription.split('\n\n').last.replaceAll(RegExp(r'\(([^\)]+)\)+'), '');
     } else {
       description = rawDescription;
     }

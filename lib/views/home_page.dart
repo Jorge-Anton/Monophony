@@ -62,7 +62,7 @@ class HomePage extends StatelessWidget {
                 onPressed: () {},
                 icon: FaIcon(
                   FontAwesomeIcons.arrowUp,
-                  color: Theme.of(context).colorScheme.onBackground,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               )
             ],

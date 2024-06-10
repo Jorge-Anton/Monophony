@@ -6,7 +6,7 @@ part of 'get_songs.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getSongsHash() => r'59dc75a96a79ed2c39074f82c784bde66f14dae0';
+String _$getSongsHash() => r'bc52a4379a0f379560b05f7b2e47a18ddc4b94d7';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,7 +34,7 @@ class _SystemHash {
 const getSongsProvider = GetSongsFamily();
 
 /// See also [getSongs].
-class GetSongsFamily extends Family<AsyncValue<List<SongModel>>> {
+class GetSongsFamily extends Family<AsyncValue<List<SongModel>?>> {
   /// See also [getSongs].
   const GetSongsFamily();
 
@@ -72,7 +72,7 @@ class GetSongsFamily extends Family<AsyncValue<List<SongModel>>> {
 }
 
 /// See also [getSongs].
-class GetSongsProvider extends FutureProvider<List<SongModel>> {
+class GetSongsProvider extends FutureProvider<List<SongModel>?> {
   /// See also [getSongs].
   GetSongsProvider(
     String query,
@@ -106,7 +106,7 @@ class GetSongsProvider extends FutureProvider<List<SongModel>> {
 
   @override
   Override overrideWith(
-    FutureOr<List<SongModel>> Function(GetSongsRef provider) create,
+    FutureOr<List<SongModel>?> Function(GetSongsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -123,7 +123,7 @@ class GetSongsProvider extends FutureProvider<List<SongModel>> {
   }
 
   @override
-  FutureProviderElement<List<SongModel>> createElement() {
+  FutureProviderElement<List<SongModel>?> createElement() {
     return _GetSongsProviderElement(this);
   }
 
@@ -141,12 +141,12 @@ class GetSongsProvider extends FutureProvider<List<SongModel>> {
   }
 }
 
-mixin GetSongsRef on FutureProviderRef<List<SongModel>> {
+mixin GetSongsRef on FutureProviderRef<List<SongModel>?> {
   /// The parameter `query` of this provider.
   String get query;
 }
 
-class _GetSongsProviderElement extends FutureProviderElement<List<SongModel>>
+class _GetSongsProviderElement extends FutureProviderElement<List<SongModel>?>
     with GetSongsRef {
   _GetSongsProviderElement(super.provider);
 

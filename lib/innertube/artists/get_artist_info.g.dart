@@ -6,7 +6,7 @@ part of 'get_artist_info.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getArtistInfoHash() => r'805c26005acb571194f2222a7572350eab691a3d';
+String _$getArtistInfoHash() => r'7c8bc209a880226ae7842a80222b1c8d6d2d5371';
 
 /// Copied from Dart SDK
 class _SystemHash {

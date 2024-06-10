@@ -6,8 +6,6 @@ import 'package:monophony/controllers/audio_controller.dart';
 import 'package:monophony/controllers/mini_player_controller.dart';
 import 'package:monophony/innertube/artists/get_artist_info.dart';
 import 'package:monophony/innertube/innertube.dart';
-import 'package:monophony/innertube/models/browse_response.dart';
-import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/notifiers/selected_song_notifier.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/widgets/my_text_field.dart';

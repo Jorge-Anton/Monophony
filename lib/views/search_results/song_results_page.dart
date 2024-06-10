@@ -40,9 +40,10 @@ class _SongResultsPageState extends ConsumerState<SongResultsPage> {
   @override
   Widget build(BuildContext context) {
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-    final AsyncValue<List<SongModel>> songResults = ref.watch(getSongsProvider(SongResultsPage._activeSearchNotifier.value));
+    final AsyncValue<List<SongModel>?> songResults = ref.watch(getSongsProvider(SongResultsPage._activeSearchNotifier.value));
     return songResults.when(
       data: (result) {
+        if (result == null) return const SizedBox.shrink();
         return ListView.builder(
           padding: EdgeInsets.zero,
           itemCount: result.length + 1,

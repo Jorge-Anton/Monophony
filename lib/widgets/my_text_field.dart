@@ -34,7 +34,7 @@ class MyTextField extends StatelessWidget {
         fontSize: 35,
         height: 1,
         fontWeight: FontWeight.w500,
-        color: Theme.of(context).colorScheme.onBackground
+        color: Theme.of(context).colorScheme.onSurface
       ),
       decoration: InputDecoration(
         contentPadding: EdgeInsets.zero,
