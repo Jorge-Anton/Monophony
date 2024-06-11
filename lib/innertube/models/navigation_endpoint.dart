@@ -19,6 +19,7 @@ class NavigationEndpoint {
 class Watch {
   String? playlistId;
   String? videoId;
+  String? params;
 
   Watch(this.playlistId, this.videoId);
 

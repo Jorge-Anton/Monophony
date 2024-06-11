@@ -192,6 +192,24 @@ Future showSongDetails(SongModel song, {bool fromQueue = false}) {
                     fontSize: 14
                   ),
                 ),
+              ),
+              if (fromQueue && audioController.currentSongNotifier.value != song)
+              ListTile(
+                onTap: () {
+                  audioController.remove(audioController.playlistNotifier.value.indexOf(song));
+                  Navigator.pop(context);
+                },
+                leading: Transform.scale(
+                  scale: 0.85,
+                  child: const Icon(Icons.delete_outline_rounded),
+                ),
+                title: const Text(
+                  'Eliminar de la cola',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14
+                  ),
+                ),
               )
             ],
           )

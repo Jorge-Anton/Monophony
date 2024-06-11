@@ -38,23 +38,4 @@ Future<List<SongModel>?> getSongs(GetSongsRef ref, String query) async {
   final SearchResponse json = SearchResponse.fromJson(jsonDecode(decodedBr));
 
   return json.contents?.tabbedSearchResultsRenderer?.tabs?.first.tabRenderer?.content?.sectionListRenderer?.contents?.elementAtOrNull(1)?.musicShelfRenderer?.contents?.nonNulls.map((e) => e.musicResponsiveListItemRenderer).nonNulls.map((e) => SongModel.fromMusicResponsiveListItemRenderer(e)).toList();
-
-  // final json = jsonDecode(decodedBr);
-  // for (final song in json["contents"]["tabbedSearchResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][1]["musicShelfRenderer"]["contents"]) {
-    
-  //   result.add(SongModel.fromSearchJson(song));
-  // }
-  // return result;
-
-  // if (res.statusCode == 200) {
-  //   final json = jsonDecode(res.body);
-  //   for (final song in json["contents"]["tabbedSearchResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][1]["musicShelfRenderer"]["contents"]) {
-      
-  //     result.add(SongModel.fromSearchJson(song));
-  //   }
-  //   return result;
-  // } else {
-  //   throw Exception('Network Error');
-  // }
-
 }

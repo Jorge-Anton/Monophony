@@ -42,8 +42,12 @@ class _MyAppState extends State<MyApp> {
     dominantColor = dominantColorController.value;
     audioController.init();
     audioController.currentSongNotifier.addListener(() {
-      final String url = audioController.currentSongNotifier.value!.artUri.toString();
-      dominantColorController.getImagePalette(CachedNetworkImageProvider('$url-w60-h60'));
+      final String? url = audioController.currentSongNotifier.value?.artUri.toString();
+      if (url != null) {
+        dominantColorController.getImagePalette(CachedNetworkImageProvider('$url-w60-h60'));
+      } else {
+        dominantColorController.resetPalette();
+      }
     });
     dominantColorController.addListener(() {
       setState(() {

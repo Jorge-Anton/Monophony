@@ -30,7 +30,6 @@ class SearchFab extends StatelessWidget {
             showFabNotifier: showFabNotifier, 
             onPressed: () {
               getIt<ActiveSearchNotifier>().setActiveSearch('');
-              // ref.read(activeSearchControllerProvider.notifier).setActiveSearch('');
               Navigator.push(context, createRoute(const MySearchPage()));
             },
             child: const Icon(Icons.search_rounded)

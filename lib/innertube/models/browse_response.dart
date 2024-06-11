@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:monophony/innertube/models/button_renderer.dart';
 import 'package:monophony/innertube/models/runs.dart';
 import 'package:monophony/innertube/models/section_list_renderer.dart';
 import 'package:monophony/innertube/models/tabs.dart';
@@ -58,9 +59,31 @@ class MusicImmersiveHeaderRenderer {
   Runs? title;
   Runs? description;
   ThumbnailRenderer? thumbnail;
+  PlayButton? playButton;
+  StartRadioButton? startRadioButton;
 
   MusicImmersiveHeaderRenderer(this.title, this.description, this.thumbnail);
 
   factory MusicImmersiveHeaderRenderer.fromJson(Map<String, dynamic> json) => _$MusicImmersiveHeaderRendererFromJson(json);
   Map<String, dynamic> toJson() => _$MusicImmersiveHeaderRendererToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class PlayButton {
+  ButtonRenderer? buttonRenderer;
+
+  PlayButton(this.buttonRenderer);
+
+  factory PlayButton.fromJson(Map<String, dynamic> json) => _$PlayButtonFromJson(json);
+  Map<String, dynamic> toJson() => _$PlayButtonToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class StartRadioButton {
+  ButtonRenderer? buttonRenderer;
+
+  StartRadioButton(this.buttonRenderer);
+
+  factory StartRadioButton.fromJson(Map<String, dynamic> json) => _$StartRadioButtonFromJson(json);
+  Map<String, dynamic> toJson() => _$StartRadioButtonToJson(this);
 }

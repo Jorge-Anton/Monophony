@@ -3,14 +3,13 @@ import 'package:flutter/rendering.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:monophony/controllers/audio_controller.dart';
 import 'package:monophony/controllers/fab_controller.dart';
-import 'package:monophony/models/song_model.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/widgets/fabs/hide_on_scroll_fab.dart';
 import 'package:monophony/widgets/mini_players/queue/close_expanded_queue.dart';
 import 'package:monophony/widgets/show_song_details.dart';
 import 'package:monophony/widgets/song_tile.dart';
 
-class ExpandedQueue extends StatefulWidget {
+class ExpandedQueue extends StatelessWidget {
   const ExpandedQueue({
     super.key,
     required this.controller,
@@ -19,21 +18,8 @@ class ExpandedQueue extends StatefulWidget {
 
   final MiniplayerController controller;
   final double height;
-
-  @override
-  State<ExpandedQueue> createState() => _ExpandedQueueState();
-}
-
-class _ExpandedQueueState extends State<ExpandedQueue> {
-  late AudioController _audioController;
-  late FabController _fabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _audioController = getIt<AudioController>();
-    _fabController = FabController();
-  }
+  static final AudioController _audioController = getIt<AudioController>();
+  static final FabController _fabController = FabController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +36,7 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                     backgroundColor: ElevationOverlay.applySurfaceTint(Theme.of(context).colorScheme.surface, Theme.of(context).colorScheme.surfaceTint, 3.0),
                     body: ValueListenableBuilder(
                       valueListenable: _audioController.currentSongNotifier,
-                      builder: (context, value, child) {
-                        final List<SongModel> playlist = _audioController.playlistNotifier.value;
-
+                      builder: (context, currentSong, child) {
                         return NotificationListener<UserScrollNotification>(
                           onNotification: (notification) {
                             final ScrollDirection direction = notification.direction;
@@ -63,18 +47,23 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                             }
                             return true;
                           },
-                          child: ListView.builder(
-                            itemCount: playlist.length,
-                            itemBuilder: (context, index) {
-                              return SongTile(
-                                active: playlist[index] == _audioController.currentSongNotifier.value,
-                                song: playlist[index],
-                                onTap: () {
-                                  _audioController.skipToItem(playlist[index]);
-                                  setState(() {});
-                                },
-                                onLongPress: () {
-                                  showSongDetails(playlist[index], fromQueue: true);
+                          child: ValueListenableBuilder(
+                            valueListenable: _audioController.playlistNotifier, 
+                            builder: (context, playlist, child) {
+                              return ListView.builder(
+                                itemCount: playlist.length,
+                                itemBuilder: (context, index) {
+                                  return SongTile(
+                                    active: playlist[index] == currentSong,
+                                    song: playlist[index],
+                                    onTap: () {
+                                      _audioController.skipToItem(playlist[index]);
+                                      // setState(() {});
+                                    },
+                                    onLongPress: () {
+                                      showSongDetails(playlist[index], fromQueue: true);
+                                    },
+                                  );
                                 },
                               );
                             },
@@ -86,18 +75,18 @@ class _ExpandedQueueState extends State<ExpandedQueue> {
                       showFabNotifier: _fabController.showFabNotifier, 
                       onPressed: () {
                         _audioController.shuffle();
-                        setState(() {});
+                        // setState(() {});
                       },
                       child: const Icon(Icons.shuffle_rounded)
                     ),
                   ),
                 ),
-                CloseExpandedQueue(widget: widget, audioController: _audioController),
+                CloseExpandedQueue(controller: controller, audioController: _audioController),
               ],
             ),
           ),
           Opacity(
-            opacity: widget.height > 80 ? 0 : (widget.height - 80) / (60-80),
+            opacity: height > 80 ? 0 : (height - 80) / (60-80),
             child: SizedBox(
               height: 60,
               width: MediaQuery.of(context).size.width,

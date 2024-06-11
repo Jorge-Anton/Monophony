@@ -1,6 +1,7 @@
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/material.dart';
 import 'package:audio_service/audio_service.dart';
+import 'package:monophony/innertube/get_shuffle.dart';
 import 'package:monophony/notifiers/selected_song_notifier.dart';
 import 'package:monophony/models/song_model.dart';
 import 'package:monophony/notifiers/play_button_notifier.dart';
@@ -53,6 +54,34 @@ class AudioController  {
         _audioHandler.addQueueItems(playlist);
       }
     }
+  }
+
+  Future<void> loadShuffle({required String songId, required String playlistId, required String params}) async {
+    await stop();
+    seek(Duration.zero);
+    await _audioHandler.customAction('clear');
+
+    final List<SongModel>? playlist = await getShuffle(songId, playlistId, params);
+    if (playlist != null) {
+      await _audioHandler.addQueueItems(playlist);
+      play();
+      getIt<SelectedSongNotifier>().setActiveSong(playlist.first);
+    }
+
+    // final SelectedSongNotifier selectedSongNotifier = getIt<SelectedSongNotifier>();
+    // final firstSong = selectedSongNotifier.value;
+
+    // if (firstSong != null) {
+    //   await _audioHandler.addQueueItem(firstSong);
+
+    //   play();
+
+    //   final playlist = await getShuffle(firstSong.id, playlistId, params);
+    //   if (playlist != null) {
+    //     playlist.removeAt(0);
+    //     _audioHandler.addQueueItems(playlist);
+    //   }
+    // }
   }
 
   void _listenToChangesInPlaylist() {
@@ -222,5 +251,6 @@ class AudioController  {
 
   Future<void> stop() async {
     await _audioHandler.stop();
+    currentSongNotifier.value = null;
   }
 }

@@ -28,9 +28,7 @@ Future<List<SongModel>?> getQueue(String songId) async {
 
   if (response1.statusCode == 200) {
     final decodedBr = brotli.decodeToString(response1.bodyBytes, encoding: const Utf8Codec());
-    // final json = jsonDecode(decodedBr);
     final NextResponse json = NextResponse.fromJson(jsonDecode(decodedBr));
-    // final String playlistId = json["contents"]["singleColumnMusicWatchNextResultsRenderer"]["tabbedRenderer"]["watchNextTabbedResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["musicQueueRenderer"]["content"]["playlistPanelRenderer"]["contents"][1]["automixPreviewVideoRenderer"]["content"]["automixPlaylistVideoRenderer"]["navigationEndpoint"]["watchPlaylistEndpoint"]["playlistId"];
     final String playlistId = json.contents?.singleColumnMusicWatchNextResultsRenderer?.tabbedRenderer?.watchNextTabbedResultsRenderer?.tabs?.firstOrNull?.tabRenderer?.content?.musicQueueRenderer?.content?.playlistPanelRenderer?.contents?.elementAtOrNull(1)?.automixPreviewVideoRenderer?.content?.automixPlaylistVideoRenderer?.navigationEndpoint?.watchPlaylistEndpoint?.playlistId ?? '';
 
     final body = '''{"context":{"client":{"clientName":"WEB_REMIX","clientVersion":"1.20220918","platform":"DESKTOP","hl":"en","visitorData":"CgtEUlRINDFjdm1YayjX1pSaBg%3D%3D"}},"videoId":"$songId","isAudioOnly":true,"playlistId":"$playlistId","tunerSettingValue":"AUTOMIX_SETTING_NORMAL","params":"wAEB8gECeAHqBAt4SHhhYTJwZExERQ%3D%3D","watchEndpointMusicSupportedConfigs":{"musicVideoType":"MUSIC_VIDEO_TYPE_ATV"}}''';
@@ -42,14 +40,9 @@ Future<List<SongModel>?> getQueue(String songId) async {
 
     if (response2.statusCode == 200) {
       final decodedBr = brotli.decodeToString(response2.bodyBytes, encoding: const Utf8Codec());
-      // final json = jsonDecode(decodedBr);
       final NextResponse json = NextResponse.fromJson(jsonDecode(decodedBr));
       return json.contents?.singleColumnMusicWatchNextResultsRenderer?.tabbedRenderer?.watchNextTabbedResultsRenderer?.tabs?.firstOrNull?.tabRenderer?.content?.musicQueueRenderer?.content?.playlistPanelRenderer?.contents?.nonNulls.map((e) => e.playlistPanelVideoRenderer).nonNulls.map((e) => SongModel.fromPlaylistVideoRenderer(e)).toList();
       
-      // for (final song in json["contents"]["singleColumnMusicWatchNextResultsRenderer"]["tabbedRenderer"]["watchNextTabbedResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["musicQueueRenderer"]["content"]["playlistPanelRenderer"]["contents"]) {
-      //   result.add(SongModel.fromNextJson(song));
-      // }
-      // return result;
     } else {
       throw Exception('Network error');
     }

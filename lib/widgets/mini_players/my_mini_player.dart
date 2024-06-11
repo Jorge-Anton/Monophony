@@ -49,7 +49,6 @@ class _MyMiniPlayerState extends State<MyMiniPlayer> {
             audioController.stop();
             audioController.seek(Duration.zero);
             selectedSongNotifier.clearActiveSong();
-            getIt<DominantColorNotifier>().resetPalette();
             shouldExpand = true;
           },
           controller: myMiniplayerController.controller,

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:miniplayer/miniplayer.dart';
 import 'package:monophony/controllers/audio_controller.dart';
-import 'package:monophony/widgets/mini_players/queue/expanded_queue.dart';
 
 class CloseExpandedQueue extends StatelessWidget {
   const CloseExpandedQueue({
     super.key,
-    required this.widget,
-    required AudioController audioController,
-  }) : _audioController = audioController;
+    required this.controller,
+    required this.audioController,
+  });
 
-  final ExpandedQueue widget;
-  final AudioController _audioController;
+  final MiniplayerController controller;
+  final AudioController audioController;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class CloseExpandedQueue extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           child: IconButton.filledTonal(
             onPressed: () {
-              widget.controller.animateToHeight(
+              controller.animateToHeight(
                 height: 60,
                 duration: Durations.medium2
               );
@@ -50,11 +50,16 @@ class CloseExpandedQueue extends StatelessWidget {
                       borderRadius: BorderRadius.circular(40.0),
                       color: ElevationOverlay.applySurfaceTint(Theme.of(context).colorScheme.surface, Theme.of(context).colorScheme.surfaceTint, 3.0)
                     ),
-                    child: Text(
-                      '${_audioController.playlistNotifier.value.length} canciones',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500
-                      ),
+                    child: ValueListenableBuilder(
+                      valueListenable: audioController.playlistNotifier,
+                      builder: (context, value, child) {
+                        return Text(
+                          '${value.length} canciones',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -62,7 +67,7 @@ class CloseExpandedQueue extends StatelessWidget {
                   color: ElevationOverlay.applySurfaceTint(Theme.of(context).colorScheme.surface, Theme.of(context).colorScheme.surfaceTint, 3.0),
                   borderRadius: BorderRadius.circular(40.0),
                   child: ValueListenableBuilder(
-                    valueListenable: _audioController.repeatPlaylistButtonNotifier,
+                    valueListenable: audioController.repeatPlaylistButtonNotifier,
                     builder: (context, value, child) {  
                       return InkWell(
                         customBorder: RoundedRectangleBorder(
@@ -70,7 +75,7 @@ class CloseExpandedQueue extends StatelessWidget {
                         ),
                         radius: 20.0,
                         onTap: () {
-                          _audioController.repeatPlaylist();
+                          audioController.repeatPlaylist();
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),

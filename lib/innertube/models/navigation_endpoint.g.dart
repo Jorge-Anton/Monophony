@@ -34,11 +34,12 @@ Map<String, dynamic> _$NavigationEndpointToJson(NavigationEndpoint instance) =>
 Watch _$WatchFromJson(Map<String, dynamic> json) => Watch(
       json['playlistId'] as String?,
       json['videoId'] as String?,
-    );
+    )..params = json['params'] as String?;
 
 Map<String, dynamic> _$WatchToJson(Watch instance) => <String, dynamic>{
       'playlistId': instance.playlistId,
       'videoId': instance.videoId,
+      'params': instance.params,
     };
 
 WatchPlaylist _$WatchPlaylistFromJson(Map<String, dynamic> json) =>

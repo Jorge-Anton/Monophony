@@ -84,7 +84,14 @@ MusicImmersiveHeaderRenderer _$MusicImmersiveHeaderRendererFromJson(
           ? null
           : ThumbnailRenderer.fromJson(
               json['thumbnail'] as Map<String, dynamic>),
-    );
+    )
+      ..playButton = json['playButton'] == null
+          ? null
+          : PlayButton.fromJson(json['playButton'] as Map<String, dynamic>)
+      ..startRadioButton = json['startRadioButton'] == null
+          ? null
+          : StartRadioButton.fromJson(
+              json['startRadioButton'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$MusicImmersiveHeaderRendererToJson(
         MusicImmersiveHeaderRenderer instance) =>
@@ -92,4 +99,31 @@ Map<String, dynamic> _$MusicImmersiveHeaderRendererToJson(
       'title': instance.title?.toJson(),
       'description': instance.description?.toJson(),
       'thumbnail': instance.thumbnail?.toJson(),
+      'playButton': instance.playButton?.toJson(),
+      'startRadioButton': instance.startRadioButton?.toJson(),
+    };
+
+PlayButton _$PlayButtonFromJson(Map<String, dynamic> json) => PlayButton(
+      json['buttonRenderer'] == null
+          ? null
+          : ButtonRenderer.fromJson(
+              json['buttonRenderer'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$PlayButtonToJson(PlayButton instance) =>
+    <String, dynamic>{
+      'buttonRenderer': instance.buttonRenderer?.toJson(),
+    };
+
+StartRadioButton _$StartRadioButtonFromJson(Map<String, dynamic> json) =>
+    StartRadioButton(
+      json['buttonRenderer'] == null
+          ? null
+          : ButtonRenderer.fromJson(
+              json['buttonRenderer'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$StartRadioButtonToJson(StartRadioButton instance) =>
+    <String, dynamic>{
+      'buttonRenderer': instance.buttonRenderer?.toJson(),
     };
