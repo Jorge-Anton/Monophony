@@ -42,6 +42,7 @@ class WatchPlaylist {
 class Browse {
   String? params;
   String? browseId;
+  BrowseEndpointContextSupportedConfigs? browseEndpointContextSupportedConfigs;
 
   Browse(this.browseId, this.params);
 
@@ -60,3 +61,23 @@ class Search {
   Map<String, dynamic> toJson() => _$SearchToJson(this);
 }
 
+@JsonSerializable(explicitToJson: true)
+class BrowseEndpointContextSupportedConfigs {
+  BrowseEndpointContextMusicConfig? browseEndpointContextMusicConfig;
+
+  BrowseEndpointContextSupportedConfigs(this.browseEndpointContextMusicConfig);
+
+  factory BrowseEndpointContextSupportedConfigs.fromJson(Map<String, dynamic> json) => _$BrowseEndpointContextSupportedConfigsFromJson(json);
+  Map<String, dynamic> toJson() => _$BrowseEndpointContextSupportedConfigsToJson(this); 
+}
+
+
+@JsonSerializable(explicitToJson: true)
+class BrowseEndpointContextMusicConfig {
+  String? pageType;
+
+  BrowseEndpointContextMusicConfig(this.pageType);
+
+  factory BrowseEndpointContextMusicConfig.fromJson(Map<String, dynamic> json) => _$BrowseEndpointContextMusicConfigFromJson(json);
+  Map<String, dynamic> toJson() => _$BrowseEndpointContextMusicConfigToJson(this);
+}

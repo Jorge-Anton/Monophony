@@ -173,6 +173,25 @@ Future showSongDetails(SongModel song, {bool fromQueue = false}) {
                   color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
+              if (song.album != null)
+              ListTile(
+                onTap: () {
+                  print(song.album);
+                },
+                leading: Transform.scale(
+                  scale: 0.85,
+                  child: const FaIcon(
+                    FontAwesomeIcons.recordVinyl,
+                  ),
+                ),
+                title: const Text(
+                  'Ir al album',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14
+                  ),
+                ),
+              ),
               for (final artist in song.artistsList)
               ListTile(
                 onTap: () {

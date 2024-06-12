@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:miniplayer/miniplayer.dart';
 import 'package:monophony/controllers/audio_controller.dart';
-import 'package:monophony/notifiers/dominant_color_controller.dart';
 import 'package:monophony/controllers/mini_player_controller.dart';
 import 'package:monophony/notifiers/selected_song_notifier.dart';
 import 'package:monophony/services/service_locator.dart';

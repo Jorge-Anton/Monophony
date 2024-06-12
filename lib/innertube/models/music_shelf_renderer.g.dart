@@ -17,10 +17,14 @@ MusicShelfRenderer _$MusicShelfRendererFromJson(Map<String, dynamic> json) =>
       json['title'] == null
           ? null
           : Runs.fromJson(json['title'] as Map<String, dynamic>),
-    );
+    )..bottomEndpoint = json['bottomEndpoint'] == null
+        ? null
+        : NavigationEndpoint.fromJson(
+            json['bottomEndpoint'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$MusicShelfRendererToJson(MusicShelfRenderer instance) =>
     <String, dynamic>{
+      'bottomEndpoint': instance.bottomEndpoint?.toJson(),
       'contents': instance.contents?.map((e) => e.toJson()).toList(),
       'continuations': instance.continuations?.map((e) => e.toJson()).toList(),
       'title': instance.title?.toJson(),

@@ -28,6 +28,7 @@ class SongTile extends StatelessWidget {
       },
       minVerticalPadding: 16.0,
       horizontalTitleGap: 12.0,
+      contentPadding: const EdgeInsets.only(left: 16.0, right: 14.0),
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(6.0),
         child: Stack(

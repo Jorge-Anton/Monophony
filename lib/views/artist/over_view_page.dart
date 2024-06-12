@@ -9,6 +9,7 @@ import 'package:monophony/controllers/mini_player_controller.dart';
 import 'package:monophony/innertube/artists/get_artist_info.dart';
 import 'package:monophony/innertube/innertube.dart';
 import 'package:monophony/notifiers/selected_song_notifier.dart';
+import 'package:monophony/notifiers/view_notifier.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/widgets/fabs/radio_fab.dart';
 import 'package:monophony/widgets/my_text_field.dart';
@@ -18,11 +19,13 @@ class OverViewPage extends ConsumerWidget {
   const OverViewPage({
     super.key,
     required this.artistName,
-    required this.artistId
+    required this.artistId,
+    required this.viewNotifier
   });
 
   final String artistName;
   final String artistId;
+  final ViewNotifier viewNotifier;
 
   static final AudioController _audioController = getIt<AudioController>();
   static final SelectedSongNotifier _selectedSongNotifier = getIt<SelectedSongNotifier>();
@@ -67,7 +70,7 @@ class OverViewPage extends ConsumerWidget {
                             padding: WidgetStateProperty.all<EdgeInsetsGeometry>(const EdgeInsets.symmetric(horizontal: 15, vertical: 15)),
                           ),
                           onPressed: () {
-                            _audioController.loadShuffle(songId: result.shuffle["songId"] ?? '', playlistId: result.shuffle["playlistId"] ?? '', params: result.shuffle["params"] ?? '');
+                            _audioController.loadShuffle(result.shuffleEndpoint);
                             getIt<MyMiniPlayerController>().dragDownPercentageNotifier.value = 0;
                             if (getIt<SelectedSongNotifier>().value != null) {
                               getIt<MyMiniPlayerController>().controller.animateToHeight(height: MediaQuery.of(context).size.height, duration: Durations.medium2);
@@ -126,7 +129,9 @@ class OverViewPage extends ConsumerWidget {
                               ),
                             ),
                             TextButton(
-                              onPressed: () {}, 
+                              onPressed: () {
+                                viewNotifier.changeView(1);
+                              }, 
                               child: const Text(
                                 'Ver todo',
                                 style: TextStyle(
@@ -334,7 +339,7 @@ class OverViewPage extends ConsumerWidget {
             floatingActionButton: RadioFab(
               showFabNotifier: _fabController.showFabNotifier,
               onPressed: () {
-                _audioController.loadShuffle(songId: result.radio["songId"] ?? '', playlistId: result.radio["playlistId"] ?? '', params: result.radio["params"] ?? '');
+                _audioController.loadShuffle(result.radioEndpoint);
                 getIt<MyMiniPlayerController>().controller.animateToHeight(height: MediaQuery.of(context).size.height, duration: Durations.medium2);
                 if (getIt<SelectedSongNotifier>().value != null) {
                   getIt<MyMiniPlayerController>().dragDownPercentageNotifier.value = 0;

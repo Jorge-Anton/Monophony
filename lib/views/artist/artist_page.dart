@@ -31,7 +31,7 @@ class ArtistPage extends StatelessWidget {
           ),
           Expanded(
             child: MyPageView(
-              views: artistViews(artistId: artistId, artistName: artistName), 
+              views: artistViews(artistId: artistId, artistName: artistName, viewNotifier: viewNotifier), 
               pageController: pageController, 
               viewNotifier: viewNotifier
             )

@@ -14,6 +14,21 @@ class MusicResponsiveListItemRenderer {
 
   factory MusicResponsiveListItemRenderer.fromJson(Map<String, dynamic> json) => _$MusicResponsiveListItemRendererFromJson(json);
   Map<String, dynamic> toJson() => _$MusicResponsiveListItemRendererToJson(this);
+
+  Run? findSectionByPageType(String pageType) {
+    Run? run;
+    for (final flexcolumn in flexColumns) {
+      run = flexcolumn.musicResponsiveListItemFlexColumnRenderer?.text?.runs.cast<Run?>().firstWhere((Run? run) {
+        return run?.navigationEndpoint?.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == pageType;
+      },
+      orElse: () => null
+      );
+
+      if (run != null) break;
+    }
+
+    return run;
+  }
 }
 
 Object? mapper(json, field) => json["musicResponsiveListItemFlexColumnRenderer"] ?? json["musicResponsiveListItemFixedColumnRenderer"];

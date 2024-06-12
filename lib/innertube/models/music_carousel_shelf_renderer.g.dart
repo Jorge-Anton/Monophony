@@ -75,11 +75,28 @@ MusicCarouselShelfBasicHeaderRenderer
           json['title'] == null
               ? null
               : Runs.fromJson(json['title'] as Map<String, dynamic>),
-        );
+        )..moreContentButton = json['moreContentButton'] == null
+            ? null
+            : MoreContentButton.fromJson(
+                json['moreContentButton'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$MusicCarouselShelfBasicHeaderRendererToJson(
         MusicCarouselShelfBasicHeaderRenderer instance) =>
     <String, dynamic>{
+      'moreContentButton': instance.moreContentButton?.toJson(),
       'title': instance.title?.toJson(),
       'strapline': instance.strapline?.toJson(),
+    };
+
+MoreContentButton _$MoreContentButtonFromJson(Map<String, dynamic> json) =>
+    MoreContentButton(
+      json['buttonRenderer'] == null
+          ? null
+          : ButtonRenderer.fromJson(
+              json['buttonRenderer'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$MoreContentButtonToJson(MoreContentButton instance) =>
+    <String, dynamic>{
+      'buttonRenderer': instance.buttonRenderer?.toJson(),
     };

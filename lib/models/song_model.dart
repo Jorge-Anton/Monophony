@@ -36,7 +36,16 @@ class SongModel extends MediaItem {
     final List<String> artistsId = renderer.flexColumns.elementAtOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs.map((e) => e.navigationEndpoint?.browseEndpoint?.browseId ?? '').toList() ?? [];
     Duration? duration;
     if (renderer.flexColumns.elementAtOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.text.contains(' • ') == true) {
-      duration = parseDuration(renderer.flexColumns.elementAtOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs.lastOrNull?.text);
+      final String? stringDuration = renderer.flexColumns.elementAtOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs.lastOrNull?.text;
+      if (stringDuration != null) {
+        duration = parseDuration(stringDuration);
+      }
+    }
+    if (duration == null) {
+      final String? stringDuration = renderer.fixedColumns?.firstOrNull?.musicResponsiveListItemFlexColumnRenderer?.text?.runs.firstOrNull?.text;
+      if (stringDuration != null) {
+        duration = parseDuration(stringDuration);
+      }
     }
     return SongModel(
       title: renderer.flexColumns.firstOrNull?.musicResponsiveListItemFlexColumnRenderer?.text?.runs.firstOrNull?.text ?? '', 
@@ -45,6 +54,7 @@ class SongModel extends MediaItem {
       artist: artist.join(),
       artistsList: artist.nonNulls.where((e) => e != ' & ' && e != ', ').toList(),
       artistsId: artistsId,
+      album: renderer.findSectionByPageType('MUSIC_PAGE_TYPE_ALBUM')?.navigationEndpoint?.browseEndpoint?.browseId,
       artUri: Uri.parse(renderer.thumbnail?.musicThumbnailRenderer?.thumbnail?.thumbnails?.firstOrNull?.size(120) ?? ''),
       extras: {
         'artistsList': artist.where((e) => e != ' & ' && e != ', ').toList(),

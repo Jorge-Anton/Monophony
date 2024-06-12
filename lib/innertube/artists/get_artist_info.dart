@@ -72,16 +72,10 @@ Future<ArtistPage> getArtistInfo(GetArtistInfoRef ref, String artistId) async {
     songs: songsSection?.contents?.nonNulls.map((e) => e.musicResponsiveListItemRenderer).nonNulls.map((e) => SongModel.fromMusicResponsiveListItemRenderer(e)).toList(),
     albums: albumSection?.contents?.nonNulls.map((e) => e.musicTwoRowItemRenderer).nonNulls.map((e) => AlbumModel.fromMusicTwoRowItemRenderer(e)).toList(),
     singles: singlesSection?.contents?.nonNulls.map((e) => e.musicTwoRowItemRenderer).nonNulls.map((e) => AlbumModel.fromMusicTwoRowItemRenderer(e)).toList(),
-    shuffle: {
-      'songId': json.header?.musicImmersiveHeaderRenderer?.playButton?.buttonRenderer?.navigationEndpoint?.watchEndpoint?.videoId ?? '',
-      'playlistId': json.header?.musicImmersiveHeaderRenderer?.playButton?.buttonRenderer?.navigationEndpoint?.watchEndpoint?.playlistId ?? '',
-      'params': json.header?.musicImmersiveHeaderRenderer?.playButton?.buttonRenderer?.navigationEndpoint?.watchEndpoint?.params ?? ''
-    },
-    radio: {
-      'songId': json.header?.musicImmersiveHeaderRenderer?.startRadioButton?.buttonRenderer?.navigationEndpoint?.watchEndpoint?.videoId ?? '',
-      'playlistId': json.header?.musicImmersiveHeaderRenderer?.startRadioButton?.buttonRenderer?.navigationEndpoint?.watchEndpoint?.playlistId ?? '',
-      'params': json.header?.musicImmersiveHeaderRenderer?.startRadioButton?.buttonRenderer?.navigationEndpoint?.watchEndpoint?.params ?? ''
-    }
+    shuffleEndpoint: json.header?.musicImmersiveHeaderRenderer?.playButton?.buttonRenderer?.navigationEndpoint?.watchEndpoint,
+    radioEndpoint: json.header?.musicImmersiveHeaderRenderer?.startRadioButton?.buttonRenderer?.navigationEndpoint?.watchEndpoint,
+    songsEndpoint: songsSection?.bottomEndpoint?.browseEndpoint,
+    albumsEndpoint: albumSection?.header?.musicCarouselShelfBasicHeaderRenderer?.moreContentButton?.buttonRenderer?.navigationEndpoint?.browseEndpoint
   );
 
 }

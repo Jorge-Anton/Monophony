@@ -57,11 +57,18 @@ Map<String, dynamic> _$WatchPlaylistToJson(WatchPlaylist instance) =>
 Browse _$BrowseFromJson(Map<String, dynamic> json) => Browse(
       json['browseId'] as String?,
       json['params'] as String?,
-    );
+    )..browseEndpointContextSupportedConfigs =
+        json['browseEndpointContextSupportedConfigs'] == null
+            ? null
+            : BrowseEndpointContextSupportedConfigs.fromJson(
+                json['browseEndpointContextSupportedConfigs']
+                    as Map<String, dynamic>);
 
 Map<String, dynamic> _$BrowseToJson(Browse instance) => <String, dynamic>{
       'params': instance.params,
       'browseId': instance.browseId,
+      'browseEndpointContextSupportedConfigs':
+          instance.browseEndpointContextSupportedConfigs,
     };
 
 Search _$SearchFromJson(Map<String, dynamic> json) => Search(
@@ -72,4 +79,34 @@ Search _$SearchFromJson(Map<String, dynamic> json) => Search(
 Map<String, dynamic> _$SearchToJson(Search instance) => <String, dynamic>{
       'params': instance.params,
       'query': instance.query,
+    };
+
+BrowseEndpointContextSupportedConfigs
+    _$BrowseEndpointContextSupportedConfigsFromJson(
+            Map<String, dynamic> json) =>
+        BrowseEndpointContextSupportedConfigs(
+          json['browseEndpointContextMusicConfig'] == null
+              ? null
+              : BrowseEndpointContextMusicConfig.fromJson(
+                  json['browseEndpointContextMusicConfig']
+                      as Map<String, dynamic>),
+        );
+
+Map<String, dynamic> _$BrowseEndpointContextSupportedConfigsToJson(
+        BrowseEndpointContextSupportedConfigs instance) =>
+    <String, dynamic>{
+      'browseEndpointContextMusicConfig':
+          instance.browseEndpointContextMusicConfig?.toJson(),
+    };
+
+BrowseEndpointContextMusicConfig _$BrowseEndpointContextMusicConfigFromJson(
+        Map<String, dynamic> json) =>
+    BrowseEndpointContextMusicConfig(
+      json['pageType'] as String?,
+    );
+
+Map<String, dynamic> _$BrowseEndpointContextMusicConfigToJson(
+        BrowseEndpointContextMusicConfig instance) =>
+    <String, dynamic>{
+      'pageType': instance.pageType,
     };

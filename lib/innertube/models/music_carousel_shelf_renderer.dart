@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:monophony/innertube/models/button_renderer.dart';
 import 'package:monophony/innertube/models/music_responsive_list_item_renderer.dart';
 import 'package:monophony/innertube/models/music_two_row_item_renderer.dart';
 import 'package:monophony/innertube/models/runs.dart';
@@ -41,6 +42,7 @@ class Header {
 
 @JsonSerializable(explicitToJson: true)
 class MusicCarouselShelfBasicHeaderRenderer {
+  MoreContentButton? moreContentButton;
   Runs? title;
   Runs? strapline;
 
@@ -48,4 +50,14 @@ class MusicCarouselShelfBasicHeaderRenderer {
 
   factory MusicCarouselShelfBasicHeaderRenderer.fromJson(Map<String, dynamic> json) => _$MusicCarouselShelfBasicHeaderRendererFromJson(json);
   Map<String, dynamic> toJson() => _$MusicCarouselShelfBasicHeaderRendererToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class MoreContentButton {
+  ButtonRenderer? buttonRenderer;
+
+  MoreContentButton(this.buttonRenderer);
+
+  factory MoreContentButton.fromJson(Map<String, dynamic> json) => _$MoreContentButtonFromJson(json);
+  Map<String, dynamic> toJson() => _$MoreContentButtonToJson(this);
 }
