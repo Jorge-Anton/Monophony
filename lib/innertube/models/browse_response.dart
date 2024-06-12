@@ -11,6 +11,7 @@ part 'browse_response.g.dart';
 class BrowseResponse {
   Contents? contents;
   Header? header;
+  Microformat? microformat;
 
   BrowseResponse(this.contents, this.header);
 
@@ -86,4 +87,25 @@ class StartRadioButton {
 
   factory StartRadioButton.fromJson(Map<String, dynamic> json) => _$StartRadioButtonFromJson(json);
   Map<String, dynamic> toJson() => _$StartRadioButtonToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
+class Microformat {
+  MicroformatDataRenderer? microformatDataRenderer;
+
+  Microformat(this.microformatDataRenderer);
+
+  factory Microformat.fromJson(Map<String, dynamic> json) => _$MicroformatFromJson(json);
+  Map<String, dynamic> toJson() => _$MicroformatToJson(this);
+}
+
+@JsonSerializable()
+class MicroformatDataRenderer {
+  String? urlCanonical;
+
+  MicroformatDataRenderer(this.urlCanonical);
+
+  factory MicroformatDataRenderer.fromJson(Map<String, dynamic> json) => _$MicroformatDataRendererFromJson(json);
+  Map<String, dynamic> toJson() => _$MicroformatDataRendererToJson(this);
+
 }

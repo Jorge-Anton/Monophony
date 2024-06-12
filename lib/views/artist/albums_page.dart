@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monophony/innertube/artists/get_artist_albums.dart';
 import 'package:monophony/models/album_model.dart';
+import 'package:monophony/utils/create_route.dart';
+import 'package:monophony/views/album/album_page.dart';
 import 'package:monophony/widgets/album_tile.dart';
 import 'package:monophony/widgets/my_text_field.dart';
 
@@ -27,7 +29,7 @@ class AlbumsPage extends ConsumerWidget {
             mainAxisSize: MainAxisSize.max,
             children: [
               Padding(
-                padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+                padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
                 child: MyTextField(
                   controller: controller,
                   readOnly: true,
@@ -49,7 +51,7 @@ class AlbumsPage extends ConsumerWidget {
               return Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+                    padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
                     child: MyTextField(
                       controller: controller,
                       readOnly: true,
@@ -87,7 +89,7 @@ class AlbumsPage extends ConsumerWidget {
             return AlbumTile(
               album: result[index],
               onTap: () {
-                
+                Navigator.push(context, createRoute(AlbumPage(album: result[index])));
               },
             );
           },
@@ -99,7 +101,7 @@ class AlbumsPage extends ConsumerWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+              padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
               child: MyTextField(
                 controller: controller,
                 readOnly: true,

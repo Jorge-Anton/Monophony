@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 
 part 'get_artist_albums.g.dart';
 
-@Riverpod()
+@Riverpod(keepAlive: true)
 Future<List<AlbumModel>?> getArtistAlbums(GetArtistAlbumsRef ref, String artistId) async {
   final headers = {
     'Accept': 'application/json',

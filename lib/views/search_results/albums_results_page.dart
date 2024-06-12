@@ -1,37 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:monophony/controllers/audio_controller.dart';
-import 'package:monophony/controllers/mini_player_controller.dart';
-import 'package:monophony/innertube/artists/get_artist_songs.dart';
-import 'package:monophony/models/song_model.dart';
-import 'package:monophony/notifiers/selected_song_notifier.dart';
+import 'package:monophony/innertube/search/get_albums.dart';
+import 'package:monophony/models/album_model.dart';
+import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/services/service_locator.dart';
+import 'package:monophony/utils/create_route.dart';
+import 'package:monophony/views/album/album_page.dart';
+import 'package:monophony/views/search/search_page.dart';
+import 'package:monophony/widgets/album_tile.dart';
 import 'package:monophony/widgets/my_text_field.dart';
-import 'package:monophony/widgets/show_song_details.dart';
-import 'package:monophony/widgets/song_tile.dart';
 
-class SongsPage extends ConsumerWidget {
-  const SongsPage({
-    super.key,
-    required this.artistId,
-    required this.artistName
-  });
+class AlbumsResultsPage extends ConsumerWidget {
+  const AlbumsResultsPage({super.key});
 
-  final String artistId;
-  final String artistName;
-
-  static final MyMiniPlayerController _miniPlayerController = getIt<MyMiniPlayerController>();
-  static final SelectedSongNotifier _selectedSongNotifier = getIt<SelectedSongNotifier>();
-  static final AudioController _audioController = getIt<AudioController>();
+  static final ActiveSearchNotifier _activeSearchNotifier = getIt<ActiveSearchNotifier>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-    final TextEditingController controller = TextEditingController(text: artistName);
-    final AsyncValue<List<SongModel>?> songResults = ref.watch(getArtistSongsProvider(artistId));
-    return songResults.when(
+    final TextEditingController controller = TextEditingController(text: _activeSearchNotifier.value);
+    final AsyncValue<List<AlbumModel>?> albumResults = ref.watch(getAlbumsProvider(_activeSearchNotifier.value));
+    return albumResults.when(
       data: (result) {
-        if (result == null) return const SizedBox.shrink();
+        if (result == null) {
+          return Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
+                child: MyTextField(
+                  controller: controller,
+                  readOnly: true,
+                  enabled: false,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 60.0),
+                child: Text('No se han encontrado resultados'),
+              )
+            ],
+          );
+        }
         return ListView.builder(
           padding: EdgeInsets.zero,
           itemCount: result.length + 1,
@@ -41,10 +50,15 @@ class SongsPage extends ConsumerWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
-                    child: MyTextField(
-                      controller: controller,
-                      readOnly: true,
-                      enabled: false,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushAndRemoveUntil(createRoute(const MySearchPage()), ModalRoute.withName("/"));
+                      },
+                      child: MyTextField(
+                        controller: controller,
+                        readOnly: true,
+                        enabled: false,
+                      ),
                     )
                   ),
                   Padding(
@@ -72,21 +86,14 @@ class SongsPage extends ConsumerWidget {
                 ],
               );
             }
+            
             index -= 1;
 
-            return SongTile(
-              song: result[index], 
+            return AlbumTile(
+              album: result[index],
               onTap: () {
-                _selectedSongNotifier.setActiveSong(result[index]);
-                _miniPlayerController.dragDownPercentageNotifier.value = 0;
-                _audioController.loadPlaylist();
-                if (_selectedSongNotifier.value != null) {
-                  _miniPlayerController.controller.animateToHeight(height: MediaQuery.of(context).size.height, duration: Durations.medium2);
-                }
-              }, 
-              onLongPress: () {
-                showSongDetails(result[index]);
-              }
+                Navigator.push(context, createRoute(AlbumPage(album: result[index])));
+              },
             );
           },
         );

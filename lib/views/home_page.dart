@@ -13,7 +13,7 @@ class HomePage extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+            padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
             child: Align(
               alignment: Alignment.topRight,
               child: Column(

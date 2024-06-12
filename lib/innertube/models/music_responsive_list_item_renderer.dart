@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:monophony/innertube/models/navigation_endpoint.dart';
 import 'package:monophony/innertube/models/runs.dart';
 import 'package:monophony/innertube/models/thumbnail_renderer.dart';
 
@@ -9,6 +10,7 @@ class MusicResponsiveListItemRenderer {
   List<FlexColumn>? fixedColumns;
   List<FlexColumn> flexColumns;
   ThumbnailRenderer? thumbnail;
+  NavigationEndpoint? navigationEndpoint;
 
   MusicResponsiveListItemRenderer(this.fixedColumns, this.flexColumns, this.thumbnail);
 

@@ -74,7 +74,7 @@ class _OnlineSearchPageState extends State<OnlineSearchPage> {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+            padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
             child: MyTextField(
               controller: _controller,
               autofocus: true,

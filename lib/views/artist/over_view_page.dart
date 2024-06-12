@@ -54,7 +54,7 @@ class OverViewPage extends ConsumerWidget {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+                    padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
                     child: MyTextField(
                       controller: controller,
                       enabled: false,
@@ -100,7 +100,16 @@ class OverViewPage extends ConsumerWidget {
                     padding: const EdgeInsets.only(left: 28.0, right: 32.0, top: 18.0, bottom: 18.0),
                     child: ClipOval(
                       child: CachedNetworkImage(
-                        imageUrl: result.thumbnail!.size(480),
+                        imageUrl: result.thumbnail?.size(480) ?? '',
+                        errorWidget: (context, url, error) {
+                          return AspectRatio(
+                            aspectRatio: 1,
+                            child: Container(
+                              width: double.infinity,
+                              color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
+                            ),
+                          );
+                        },
                         placeholder: (context, url) {
                           return AspectRatio(
                             aspectRatio: 1,
@@ -160,16 +169,32 @@ class OverViewPage extends ConsumerWidget {
                   if (result.albums != null)
                   Column(
                     children: [
-                      const Align(
+                      Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
-                          padding: EdgeInsets.only(left: 16.0, top: 18.0, bottom: 18.0),
-                          child: Text(
-                            'Albums',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 22
-                            ),
+                          padding: const EdgeInsets.only(left: 16.0, top: 18.0, bottom: 18.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text(
+                                'Álbumes',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 22
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  viewNotifier.changeView(2);
+                                }, 
+                                child: const Text(
+                                  'Ver todo',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w400
+                                  ),
+                                )
+                              )
+                            ],
                           ),
                         ),
                       ),
@@ -191,7 +216,25 @@ class OverViewPage extends ConsumerWidget {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(6.0),
                                     child: CachedNetworkImage(
-                                      imageUrl: result.albums![index].thumbnail,
+                                      imageUrl: result.albums?[index].thumbnail?.size(120) ?? '',
+                                      errorWidget: (context, url, error) {
+                                        return AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Container(
+                                            width: double.infinity,
+                                            color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
+                                          ),
+                                        );
+                                      },
+                                      placeholder: (context, url) {
+                                        return AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Container(
+                                            width: double.infinity,
+                                            color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                   const Spacer(),
@@ -252,7 +295,25 @@ class OverViewPage extends ConsumerWidget {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(6.0),
                                     child: CachedNetworkImage(
-                                      imageUrl: result.singles![index].thumbnail,
+                                      imageUrl: result.singles?[index].thumbnail?.size(120) ?? '',
+                                      errorWidget: (context, url, error) {
+                                        return AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Container(
+                                            width: double.infinity,
+                                            color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
+                                          ),
+                                        );
+                                      },
+                                      placeholder: (context, url) {
+                                        return AspectRatio(
+                                          aspectRatio: 1,
+                                          child: Container(
+                                            width: double.infinity,
+                                            color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ),
                                   const Spacer(),
@@ -355,7 +416,7 @@ class OverViewPage extends ConsumerWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+              padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
               child: MyTextField(
                 controller: controller,
                 readOnly: true,

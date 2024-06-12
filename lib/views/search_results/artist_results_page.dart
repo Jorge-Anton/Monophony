@@ -42,7 +42,7 @@ class _ArtistResultsPageState extends ConsumerState<ArtistResultsPage> {
               return Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+                    padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).pushAndRemoveUntil(createRoute(const MySearchPage()), ModalRoute.withName("/"));
@@ -76,7 +76,7 @@ class _ArtistResultsPageState extends ConsumerState<ArtistResultsPage> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+              padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
               child: GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushAndRemoveUntil(createRoute(const MySearchPage()), ModalRoute.withName("/"));

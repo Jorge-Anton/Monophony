@@ -71,6 +71,16 @@ class AudioController  {
     }
   }
 
+  Future<void> loadThisPlaylist(List<SongModel> songs) async {
+    await stop();
+    seek(Duration.zero);
+    await _audioHandler.customAction('clear');
+
+    await _audioHandler.addQueueItems(songs);
+    play();
+    getIt<SelectedSongNotifier>().setActiveSong(songs.first);
+  }
+
   void _listenToChangesInPlaylist() {
     _audioHandler.queue.listen((playlist) {
       if (playlist.isEmpty) return;
@@ -207,15 +217,23 @@ class AudioController  {
     );
   }
 
-  Future<void> add(SongModel song) async {
-    final mediaItem = MediaItem(
-      id: song.id, 
+  Future<void> enqueue(List<SongModel> songs) async {
+    if (songs.isEmpty) return;
+    final List<MediaItem> mediaItems = songs.map((song) => MediaItem(
+      id: song.id,
       title: song.title,
       artist: song.artist,
       artUri: song.artUri,
-      duration: song.duration
-    );
-    _audioHandler.addQueueItem(mediaItem);
+      duration: song.duration,
+      album: song.album,
+      extras: song.extras
+    )).toList();
+    
+    if (mediaItems.length == 1) {
+      _audioHandler.addQueueItem(mediaItems.first);
+    } else {
+      _audioHandler.addQueueItems(mediaItems);
+    }
   }
 
   void remove(int index) {

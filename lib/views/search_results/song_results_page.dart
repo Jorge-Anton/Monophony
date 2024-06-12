@@ -5,7 +5,7 @@ import 'package:monophony/controllers/audio_controller.dart';
 import 'package:monophony/controllers/mini_player_controller.dart';
 import 'package:monophony/notifiers/selected_song_notifier.dart';
 import 'package:monophony/models/song_model.dart';
-import 'package:monophony/innertube/songs/get_songs.dart';
+import 'package:monophony/innertube/search/get_songs.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/utils/create_route.dart';
 import 'package:monophony/views/search/search_page.dart';
@@ -49,7 +49,7 @@ class _SongResultsPageState extends ConsumerState<SongResultsPage> {
               return Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+                    padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
                     child: GestureDetector(
                       onTap: () {
                         Navigator.of(context).pushAndRemoveUntil(createRoute(const MySearchPage()), ModalRoute.withName("/"));
@@ -91,7 +91,7 @@ class _SongResultsPageState extends ConsumerState<SongResultsPage> {
           mainAxisSize: MainAxisSize.max,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: statusBarHeight + 32.0, right: 10.0),
+              padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
               child: GestureDetector(
                 onTap: () {
                   Navigator.of(context).pushAndRemoveUntil(createRoute(const MySearchPage()), ModalRoute.withName("/"));

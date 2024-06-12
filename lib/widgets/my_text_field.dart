@@ -32,7 +32,7 @@ class MyTextField extends StatelessWidget {
       style: TextStyle(
         overflow: TextOverflow.ellipsis,
         fontSize: 35,
-        height: 1,
+        // height: 1,
         fontWeight: FontWeight.w500,
         color: Theme.of(context).colorScheme.onSurface
       ),

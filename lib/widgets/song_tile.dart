@@ -8,12 +8,14 @@ class SongTile extends StatelessWidget {
     super.key,
     required this.song,
     this.active = false,
+    this.index,
     required this.onTap,
     required this.onLongPress
   });
 
   final SongModel song;
   final bool active;
+  final int? index;
   final void Function() onTap;
   final void Function() onLongPress;
 
@@ -33,6 +35,22 @@ class SongTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(6.0),
         child: Stack(
           children: [
+            if (index != null) 
+            SizedBox(
+              height: 60.0,
+              width: 60.0,
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  index.toString(),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
+                    fontSize: 18
+                  ),
+                ),
+              ),
+            ) else 
             CachedNetworkImage(
               imageUrl: song.artUri.toString(),
               height: 60,

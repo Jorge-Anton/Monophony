@@ -25,9 +25,27 @@ class AlbumTile extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(6.0),
               child: CachedNetworkImage(
-                imageUrl: album.thumbnail,
+                imageUrl: album.thumbnail?.size(120) ?? '',
                 width: 120,
                 height: 120,
+                errorWidget: (context, url, error) {
+                  return AspectRatio(
+                    aspectRatio: 1,
+                    child: Container(
+                      width: double.infinity,
+                      color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
+                    ),
+                  );
+                },
+                placeholder: (context, url) {
+                  return AspectRatio(
+                    aspectRatio: 1,
+                    child: Container(
+                      width: double.infinity,
+                      color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
+                    ),
+                  );
+                }
               ),
             ),
             const SizedBox(width: 12.0),
@@ -44,6 +62,17 @@ class AlbumTile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8.0),
+                  if (album.artist != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      album.artist!,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.secondary
+                      ),
+                    ),
+                  ),
                   Text(
                     album.year,
                     style: TextStyle(

@@ -14,12 +14,15 @@ BrowseResponse _$BrowseResponseFromJson(Map<String, dynamic> json) =>
       json['header'] == null
           ? null
           : Header.fromJson(json['header'] as Map<String, dynamic>),
-    );
+    )..microformat = json['microformat'] == null
+        ? null
+        : Microformat.fromJson(json['microformat'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$BrowseResponseToJson(BrowseResponse instance) =>
     <String, dynamic>{
       'contents': instance.contents?.toJson(),
       'header': instance.header?.toJson(),
+      'microformat': instance.microformat?.toJson(),
     };
 
 Contents _$ContentsFromJson(Map<String, dynamic> json) => Contents(
@@ -126,4 +129,28 @@ StartRadioButton _$StartRadioButtonFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$StartRadioButtonToJson(StartRadioButton instance) =>
     <String, dynamic>{
       'buttonRenderer': instance.buttonRenderer?.toJson(),
+    };
+
+Microformat _$MicroformatFromJson(Map<String, dynamic> json) => Microformat(
+      json['microformatDataRenderer'] == null
+          ? null
+          : MicroformatDataRenderer.fromJson(
+              json['microformatDataRenderer'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$MicroformatToJson(Microformat instance) =>
+    <String, dynamic>{
+      'microformatDataRenderer': instance.microformatDataRenderer?.toJson(),
+    };
+
+MicroformatDataRenderer _$MicroformatDataRendererFromJson(
+        Map<String, dynamic> json) =>
+    MicroformatDataRenderer(
+      json['urlCanonical'] as String?,
+    );
+
+Map<String, dynamic> _$MicroformatDataRendererToJson(
+        MicroformatDataRenderer instance) =>
+    <String, dynamic>{
+      'urlCanonical': instance.urlCanonical,
     };

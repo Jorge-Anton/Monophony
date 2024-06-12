@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'get_artist_albums.dart';
+part of 'get_album_songs.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getArtistAlbumsHash() => r'b6ca247f2db4cadffcbd82695ff8af565ed0dd25';
+String _$getAlbumSongsHash() => r'6d1c9cf330100882cc9fe92323630aa545c8f17c';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -29,30 +29,30 @@ class _SystemHash {
   }
 }
 
-/// See also [getArtistAlbums].
-@ProviderFor(getArtistAlbums)
-const getArtistAlbumsProvider = GetArtistAlbumsFamily();
+/// See also [getAlbumSongs].
+@ProviderFor(getAlbumSongs)
+const getAlbumSongsProvider = GetAlbumSongsFamily();
 
-/// See also [getArtistAlbums].
-class GetArtistAlbumsFamily extends Family<AsyncValue<List<AlbumModel>?>> {
-  /// See also [getArtistAlbums].
-  const GetArtistAlbumsFamily();
+/// See also [getAlbumSongs].
+class GetAlbumSongsFamily extends Family<AsyncValue<List<SongModel>?>> {
+  /// See also [getAlbumSongs].
+  const GetAlbumSongsFamily();
 
-  /// See also [getArtistAlbums].
-  GetArtistAlbumsProvider call(
-    String artistId,
+  /// See also [getAlbumSongs].
+  GetAlbumSongsProvider call(
+    String browseId,
   ) {
-    return GetArtistAlbumsProvider(
-      artistId,
+    return GetAlbumSongsProvider(
+      browseId,
     );
   }
 
   @override
-  GetArtistAlbumsProvider getProviderOverride(
-    covariant GetArtistAlbumsProvider provider,
+  GetAlbumSongsProvider getProviderOverride(
+    covariant GetAlbumSongsProvider provider,
   ) {
     return call(
-      provider.artistId,
+      provider.browseId,
     );
   }
 
@@ -68,91 +68,91 @@ class GetArtistAlbumsFamily extends Family<AsyncValue<List<AlbumModel>?>> {
       _allTransitiveDependencies;
 
   @override
-  String? get name => r'getArtistAlbumsProvider';
+  String? get name => r'getAlbumSongsProvider';
 }
 
-/// See also [getArtistAlbums].
-class GetArtistAlbumsProvider extends FutureProvider<List<AlbumModel>?> {
-  /// See also [getArtistAlbums].
-  GetArtistAlbumsProvider(
-    String artistId,
+/// See also [getAlbumSongs].
+class GetAlbumSongsProvider extends FutureProvider<List<SongModel>?> {
+  /// See also [getAlbumSongs].
+  GetAlbumSongsProvider(
+    String browseId,
   ) : this._internal(
-          (ref) => getArtistAlbums(
-            ref as GetArtistAlbumsRef,
-            artistId,
+          (ref) => getAlbumSongs(
+            ref as GetAlbumSongsRef,
+            browseId,
           ),
-          from: getArtistAlbumsProvider,
-          name: r'getArtistAlbumsProvider',
+          from: getAlbumSongsProvider,
+          name: r'getAlbumSongsProvider',
           debugGetCreateSourceHash:
               const bool.fromEnvironment('dart.vm.product')
                   ? null
-                  : _$getArtistAlbumsHash,
-          dependencies: GetArtistAlbumsFamily._dependencies,
+                  : _$getAlbumSongsHash,
+          dependencies: GetAlbumSongsFamily._dependencies,
           allTransitiveDependencies:
-              GetArtistAlbumsFamily._allTransitiveDependencies,
-          artistId: artistId,
+              GetAlbumSongsFamily._allTransitiveDependencies,
+          browseId: browseId,
         );
 
-  GetArtistAlbumsProvider._internal(
+  GetAlbumSongsProvider._internal(
     super._createNotifier, {
     required super.name,
     required super.dependencies,
     required super.allTransitiveDependencies,
     required super.debugGetCreateSourceHash,
     required super.from,
-    required this.artistId,
+    required this.browseId,
   }) : super.internal();
 
-  final String artistId;
+  final String browseId;
 
   @override
   Override overrideWith(
-    FutureOr<List<AlbumModel>?> Function(GetArtistAlbumsRef provider) create,
+    FutureOr<List<SongModel>?> Function(GetAlbumSongsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
-      override: GetArtistAlbumsProvider._internal(
-        (ref) => create(ref as GetArtistAlbumsRef),
+      override: GetAlbumSongsProvider._internal(
+        (ref) => create(ref as GetAlbumSongsRef),
         from: from,
         name: null,
         dependencies: null,
         allTransitiveDependencies: null,
         debugGetCreateSourceHash: null,
-        artistId: artistId,
+        browseId: browseId,
       ),
     );
   }
 
   @override
-  FutureProviderElement<List<AlbumModel>?> createElement() {
-    return _GetArtistAlbumsProviderElement(this);
+  FutureProviderElement<List<SongModel>?> createElement() {
+    return _GetAlbumSongsProviderElement(this);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is GetArtistAlbumsProvider && other.artistId == artistId;
+    return other is GetAlbumSongsProvider && other.browseId == browseId;
   }
 
   @override
   int get hashCode {
     var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, artistId.hashCode);
+    hash = _SystemHash.combine(hash, browseId.hashCode);
 
     return _SystemHash.finish(hash);
   }
 }
 
-mixin GetArtistAlbumsRef on FutureProviderRef<List<AlbumModel>?> {
-  /// The parameter `artistId` of this provider.
-  String get artistId;
+mixin GetAlbumSongsRef on FutureProviderRef<List<SongModel>?> {
+  /// The parameter `browseId` of this provider.
+  String get browseId;
 }
 
-class _GetArtistAlbumsProviderElement
-    extends FutureProviderElement<List<AlbumModel>?> with GetArtistAlbumsRef {
-  _GetArtistAlbumsProviderElement(super.provider);
+class _GetAlbumSongsProviderElement
+    extends FutureProviderElement<List<SongModel>?> with GetAlbumSongsRef {
+  _GetAlbumSongsProviderElement(super.provider);
 
   @override
-  String get artistId => (origin as GetArtistAlbumsProvider).artistId;
+  String get browseId => (origin as GetAlbumSongsProvider).browseId;
 }
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

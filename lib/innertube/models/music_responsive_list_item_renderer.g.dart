@@ -19,7 +19,10 @@ MusicResponsiveListItemRenderer _$MusicResponsiveListItemRendererFromJson(
           ? null
           : ThumbnailRenderer.fromJson(
               json['thumbnail'] as Map<String, dynamic>),
-    );
+    )..navigationEndpoint = json['navigationEndpoint'] == null
+        ? null
+        : NavigationEndpoint.fromJson(
+            json['navigationEndpoint'] as Map<String, dynamic>);
 
 Map<String, dynamic> _$MusicResponsiveListItemRendererToJson(
         MusicResponsiveListItemRenderer instance) =>
@@ -27,6 +30,7 @@ Map<String, dynamic> _$MusicResponsiveListItemRendererToJson(
       'fixedColumns': instance.fixedColumns?.map((e) => e.toJson()).toList(),
       'flexColumns': instance.flexColumns.map((e) => e.toJson()).toList(),
       'thumbnail': instance.thumbnail?.toJson(),
+      'navigationEndpoint': instance.navigationEndpoint?.toJson(),
     };
 
 FlexColumn _$FlexColumnFromJson(Map<String, dynamic> json) => FlexColumn(

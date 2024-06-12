@@ -145,7 +145,11 @@ Future showSongDetails(SongModel song, {bool fromQueue = false}) {
               if (!fromQueue)
               ListTile(
                 onTap: () {
-                  audioController.add(song);
+                  if (audioController.currentSongNotifier.value == null) {
+                    audioController.loadThisPlaylist([song]);
+                  } else {
+                    audioController.enqueue([song]);
+                  }
                   Navigator.pop(context);
                 },
                 leading: const Icon(Icons.queue_music_rounded),

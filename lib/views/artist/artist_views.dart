@@ -29,7 +29,7 @@ final List<DestinationInfoModel> artistDestinations = [
   ),
   DestinationInfoModel(
     iconName: FontAwesomeIcons.recordVinyl, 
-    name: 'Albums'
+    name: 'Álbumes'
   ),
   DestinationInfoModel(
     iconName: FontAwesomeIcons.recordVinyl, 
