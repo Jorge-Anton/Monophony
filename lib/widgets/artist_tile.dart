@@ -20,8 +20,7 @@ class ArtistTile extends StatelessWidget {
       leading: ClipRRect(
         borderRadius: BorderRadius.circular(40.0),
         child: CachedNetworkImage(
-
-          imageUrl: artist.thumbnail,
+          imageUrl: artist.thumbnail?.size(120) ?? '',
           width: 64,
           height: 64,
         ),

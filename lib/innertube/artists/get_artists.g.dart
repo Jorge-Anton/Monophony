@@ -6,7 +6,7 @@ part of 'get_artists.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$getArtistsHash() => r'982f9f991219d089e631022a08928e4e00012f1d';
+String _$getArtistsHash() => r'39371369db73bf1c4f7f0c5af0684e1f1cbf0ec2';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -34,7 +34,7 @@ class _SystemHash {
 const getArtistsProvider = GetArtistsFamily();
 
 /// See also [getArtists].
-class GetArtistsFamily extends Family<AsyncValue<List<ArtistModel>>> {
+class GetArtistsFamily extends Family<AsyncValue<List<ArtistModel>?>> {
   /// See also [getArtists].
   const GetArtistsFamily();
 
@@ -72,7 +72,7 @@ class GetArtistsFamily extends Family<AsyncValue<List<ArtistModel>>> {
 }
 
 /// See also [getArtists].
-class GetArtistsProvider extends FutureProvider<List<ArtistModel>> {
+class GetArtistsProvider extends FutureProvider<List<ArtistModel>?> {
   /// See also [getArtists].
   GetArtistsProvider(
     String query,
@@ -107,7 +107,7 @@ class GetArtistsProvider extends FutureProvider<List<ArtistModel>> {
 
   @override
   Override overrideWith(
-    FutureOr<List<ArtistModel>> Function(GetArtistsRef provider) create,
+    FutureOr<List<ArtistModel>?> Function(GetArtistsRef provider) create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -124,7 +124,7 @@ class GetArtistsProvider extends FutureProvider<List<ArtistModel>> {
   }
 
   @override
-  FutureProviderElement<List<ArtistModel>> createElement() {
+  FutureProviderElement<List<ArtistModel>?> createElement() {
     return _GetArtistsProviderElement(this);
   }
 
@@ -142,13 +142,13 @@ class GetArtistsProvider extends FutureProvider<List<ArtistModel>> {
   }
 }
 
-mixin GetArtistsRef on FutureProviderRef<List<ArtistModel>> {
+mixin GetArtistsRef on FutureProviderRef<List<ArtistModel>?> {
   /// The parameter `query` of this provider.
   String get query;
 }
 
 class _GetArtistsProviderElement
-    extends FutureProviderElement<List<ArtistModel>> with GetArtistsRef {
+    extends FutureProviderElement<List<ArtistModel>?> with GetArtistsRef {
   _GetArtistsProviderElement(super.provider);
 
   @override

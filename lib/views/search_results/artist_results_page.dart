@@ -31,9 +31,28 @@ class _ArtistResultsPageState extends ConsumerState<ArtistResultsPage> {
   @override
   Widget build(BuildContext context) {
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-    final AsyncValue<List<ArtistModel>> artistsResults = ref.watch(getArtistsProvider(ArtistResultsPage._activeSearchNotifier.value));
+    final AsyncValue<List<ArtistModel>?> artistsResults = ref.watch(getArtistsProvider(ArtistResultsPage._activeSearchNotifier.value));
     return artistsResults.when(
       data: (result) {
+        if (result == null) {
+          return Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: statusBarHeight + 30.0, right: 10.0),
+                child: MyTextField(
+                  controller: _controller,
+                  readOnly: true,
+                  enabled: false,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 60.0),
+                child: Text('No se han encontrado resultados'),
+              )
+            ],
+          );
+        }
         return ListView.builder(
           padding: EdgeInsets.zero,
           itemCount: result.length + 1,

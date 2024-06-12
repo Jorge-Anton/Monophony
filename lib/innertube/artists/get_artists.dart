@@ -2,13 +2,14 @@ import 'dart:convert';
 
 import 'package:brotli/brotli.dart';
 import 'package:http/http.dart' as http;
+import 'package:monophony/innertube/models/search_response.dart';
 import 'package:monophony/models/artist_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'get_artists.g.dart';
 
 @Riverpod(keepAlive: true)
-Future<List<ArtistModel>> getArtists(GetArtistsRef ref, String query) async {
+Future<List<ArtistModel>?> getArtists(GetArtistsRef ref, String query) async {
   List<ArtistModel> result = [];
   if (query == '') return result;
 
@@ -34,20 +35,12 @@ Future<List<ArtistModel>> getArtists(GetArtistsRef ref, String query) async {
 
   final decodedBr = brotli.decodeToString(res.bodyBytes, encoding: const Utf8Codec());
 
-  final json = jsonDecode(decodedBr);
-  for (final artist in json["contents"]["tabbedSearchResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][1]["musicShelfRenderer"]["contents"]) {
-    result.add(ArtistModel.fromJson(artist));
-  }
-  return result;
+  final SearchResponse json = SearchResponse.fromJson(jsonDecode(decodedBr));
 
-  // if (res.statusCode == 200) {
-  //   final json = jsonDecode(res.body);
-  //   for (final artist in json["contents"]["tabbedSearchResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][1]["musicShelfRenderer"]["contents"]) {
-  //     result.add(ArtistModel.fromJson(artist));
-  //   }
-  //   return result;
-  // } else {
-  //   throw Exception('Network Error');
+  return json.contents?.tabbedSearchResultsRenderer?.tabs?.firstOrNull?.tabRenderer?.content?.sectionListRenderer?.contents?.elementAtOrNull(1)?.musicShelfRenderer?.contents?.nonNulls.map((e) => e.musicResponsiveListItemRenderer).nonNulls.map((e) => ArtistModel.fromMusicResponsiveListItemRenderer(e)).toList();
+
+  // for (final artist in json["contents"]["tabbedSearchResultsRenderer"]["tabs"][0]["tabRenderer"]["content"]["sectionListRenderer"]["contents"][1]["musicShelfRenderer"]["contents"]) {
+  //   result.add(ArtistModel.fromJson(artist));
   // }
-
+  // return result;
 }
