@@ -4,7 +4,7 @@ import 'package:monophony/models/thumbnail_model.dart';
 
 class AlbumModel {
   final String name;
-  final String year;
+  final String? year;
   final ThumbnailModel? thumbnail;
   final String? artist;
   final String endpoint;
@@ -12,8 +12,8 @@ class AlbumModel {
   const AlbumModel({
     required this.name,
     this.artist,
-    required this.year,
-    required this.thumbnail,
+    this.year,
+    this.thumbnail,
     required this.endpoint
   });
 

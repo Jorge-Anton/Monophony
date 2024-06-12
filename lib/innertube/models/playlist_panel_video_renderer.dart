@@ -18,4 +18,13 @@ class PlaylistPanelVideoRenderer {
 
   factory PlaylistPanelVideoRenderer.fromJson(Map<String, dynamic> json) => _$PlaylistPanelVideoRendererFromJson(json);
   Map<String, dynamic> toJson() => _$PlaylistPanelVideoRendererToJson(this);
+
+  Run? findSectionByPageType(String pageType) {
+    return longBylineText?.runs.cast<Run?>().firstWhere((Run? run) {
+      return run?.navigationEndpoint?.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == pageType;
+    },
+    orElse: () => null,
+    );
+
+  }
 }

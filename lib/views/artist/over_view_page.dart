@@ -247,7 +247,7 @@ class OverViewPage extends ConsumerWidget {
                                     ),
                                   ),
                                   Text(
-                                    result.albums![index].year,
+                                    result.albums![index].year ?? '',
                                     style: TextStyle(
                                       color: Theme.of(context).colorScheme.secondary,
                                       fontWeight: FontWeight.w600,
@@ -326,7 +326,7 @@ class OverViewPage extends ConsumerWidget {
                                     ),
                                   ),
                                   Text(
-                                    result.singles![index].year,
+                                    result.singles![index].year ?? '',
                                     style: TextStyle(
                                       color: Theme.of(context).colorScheme.secondary,
                                       fontWeight: FontWeight.w600,

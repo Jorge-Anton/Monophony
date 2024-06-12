@@ -118,7 +118,7 @@ class AlbumSongsPage extends ConsumerWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(6.0),
                       child: CachedNetworkImage(
-                        imageUrl: album.thumbnail?.size(480) ?? '',
+                        imageUrl: '${result.firstOrNull?.artUri}-w480-h480',
                         errorWidget: (context, url, error) {
                           return AspectRatio(
                             aspectRatio: 1,

@@ -225,7 +225,6 @@ class AudioController  {
       artist: song.artist,
       artUri: song.artUri,
       duration: song.duration,
-      album: song.album,
       extras: song.extras
     )).toList();
     

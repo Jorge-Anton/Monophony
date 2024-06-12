@@ -1,17 +1,20 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:monophony/innertube/models/music_responsive_list_item_renderer.dart';
 import 'package:monophony/innertube/models/playlist_panel_video_renderer.dart';
+import 'package:monophony/innertube/models/runs.dart';
+import 'package:monophony/models/album_model.dart';
 import 'package:monophony/utils/parse_duration.dart';
 
 class SongModel extends MediaItem {
   final List<String> artistsList;
   final List<String> artistsId;
+  final AlbumModel? albumModel;
 
   const SongModel({
     required super.title,
     required super.id,
     super.artUri,
-    super.album,
+    this.albumModel,
     super.duration,
     super.artist,
     super.extras,
@@ -24,10 +27,12 @@ class SongModel extends MediaItem {
       title: mediaItem.title, 
       id: mediaItem.id, 
       artist: mediaItem.artist, 
-      artistsList: mediaItem.extras!["artistsList"],
-      artistsId: mediaItem.extras!["artistsId"],
+      artistsList: mediaItem.extras?["artistsList"],
+      artistsId: mediaItem.extras?["artistsId"],
+      albumModel: AlbumModel(name: mediaItem.extras?["albumModel"]["name"], endpoint: mediaItem.extras?["albumModel"]["endpoint"]),
       artUri: mediaItem.artUri, 
-      duration: mediaItem.duration
+      duration: mediaItem.duration,
+      extras: mediaItem.extras
     );
   }
 
@@ -48,6 +53,16 @@ class SongModel extends MediaItem {
         duration = parseDuration(stringDuration);
       }
     }
+
+    final Run? albumSection = renderer.findSectionByPageType('MUSIC_PAGE_TYPE_ALBUM');
+    AlbumModel? albumModel;
+    if (albumSection != null) {
+      albumModel = AlbumModel(
+        name: albumSection.text ?? '', 
+        endpoint: albumSection.navigationEndpoint?.browseEndpoint?.browseId ?? ''
+      );
+    }
+
     return SongModel(
       title: renderer.flexColumns.firstOrNull?.musicResponsiveListItemFlexColumnRenderer?.text?.runs.firstOrNull?.text ?? '', 
       id: renderer.flexColumns.firstOrNull?.musicResponsiveListItemFlexColumnRenderer?.text?.runs.firstOrNull?.navigationEndpoint?.watchEndpoint?.videoId ?? '',
@@ -55,11 +70,15 @@ class SongModel extends MediaItem {
       artist: artist.join(),
       artistsList: artistsList,
       artistsId: artistsId,
-      album: renderer.findSectionByPageType('MUSIC_PAGE_TYPE_ALBUM')?.navigationEndpoint?.browseEndpoint?.browseId,
+      albumModel: albumModel,
       artUri: Uri.parse(renderer.thumbnail?.musicThumbnailRenderer?.thumbnail?.thumbnails?.firstOrNull?.size(120) ?? ''),
       extras: {
         'artistsList': artist.where((e) => e != ' & ' && e != ', ').toList(),
-        'artistsId': artistsId
+        'artistsId': artistsId,
+        'albumModel': {
+          'name': albumSection?.text ?? '',
+          'endpoint': albumSection?.navigationEndpoint?.browseEndpoint?.browseId ?? ''
+        },
       }
     );
   }
@@ -67,6 +86,16 @@ class SongModel extends MediaItem {
   factory SongModel.fromPlaylistVideoRenderer(PlaylistPanelVideoRenderer renderer) {
     final List<String> artist = renderer.longBylineText?.splitBySeparator() ?? [];
     final List<String> artistsId = renderer.longBylineText?.runs.nonNulls.map((e) => e.navigationEndpoint?.browseEndpoint?.browseId ?? '').toList() ?? [];
+    final Run? albumSection = renderer.findSectionByPageType('MUSIC_PAGE_TYPE_ALBUM');
+    AlbumModel? albumModel;
+    if (albumSection != null) {
+      albumModel = AlbumModel(
+        name: albumSection.text ?? '', 
+        year: '', 
+        thumbnail: null, 
+        endpoint: albumSection.navigationEndpoint?.browseEndpoint?.browseId ?? ''
+      );
+    }
     return SongModel(
       title: renderer.title?.text ?? '', 
       id: renderer.navigationEndpoint?.watchEndpoint?.videoId ?? '',
@@ -74,10 +103,15 @@ class SongModel extends MediaItem {
       artist: artist.join(),
       artistsList: artist.where((e) => e != ' & ' && e != ', ').toList(),
       artistsId: artistsId,
+      albumModel: albumModel,
       artUri: Uri.parse(renderer.thumbnail?.thumbnails?.firstOrNull?.size(120) ?? ''),
       extras: {
         'artistsList': artist.where((e) => e != ' & ' && e != ', ').toList(),
-        'artistsId': artistsId
+        'artistsId': artistsId,
+        'albumModel': {
+          'name': albumSection?.text ?? '',
+          'endpoint': albumSection?.navigationEndpoint?.browseEndpoint?.browseId ?? ''
+        },
       }
     );
   }

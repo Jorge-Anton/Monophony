@@ -5,12 +5,16 @@ import 'package:monophony/controllers/audio_controller.dart';
 import 'package:monophony/controllers/mini_player_controller.dart';
 import 'package:monophony/controllers/scaffold_controller.dart';
 import 'package:monophony/models/song_model.dart';
+import 'package:monophony/notifiers/selected_song_notifier.dart';
 import 'package:monophony/services/service_locator.dart';
 import 'package:monophony/utils/create_route.dart';
+import 'package:monophony/views/album/album_page.dart';
 import 'package:monophony/views/artist/artist_page.dart';
 
 Future showSongDetails(SongModel song, {bool fromQueue = false}) {
   final AudioController audioController = getIt<AudioController>();
+  final SelectedSongNotifier selectedSongNotifier = getIt<SelectedSongNotifier>();
+  final MyMiniPlayerController miniPlayerController = getIt<MyMiniPlayerController>();
   return showModalBottomSheet(
     context: getIt<ScaffoldController>().overlayScaffoldKey.currentContext!, 
     shape: const LinearBorder(),
@@ -112,11 +116,16 @@ Future showSongDetails(SongModel song, {bool fromQueue = false}) {
           const Divider(),
           Column(
             children: [
+              if (!fromQueue)
               ListTile(
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Unimplemented: Start radio'))
-                  );
+                  miniPlayerController.dragDownPercentageNotifier.value = 0;
+                  selectedSongNotifier.setActiveSong(song);
+                  audioController.loadPlaylist();
+                  if (selectedSongNotifier.value != null) {
+                    miniPlayerController.controller.animateToHeight(height: MediaQuery.of(context).size.height, duration: Durations.medium2);
+                  }
+                  Navigator.pop(context);
                 },
                 leading: const Icon(Icons.cell_tower_rounded),
                 title: const Text(
@@ -127,7 +136,7 @@ Future showSongDetails(SongModel song, {bool fromQueue = false}) {
                   ),
                 ),
               ),
-              if (!fromQueue)
+              if (!fromQueue && audioController.currentSongNotifier.value != song)
               ListTile(
                 onTap: () {
                   audioController.playNext(song);
@@ -177,10 +186,15 @@ Future showSongDetails(SongModel song, {bool fromQueue = false}) {
                   color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
-              if (song.album != null)
+              if (song.albumModel != null)
               ListTile(
                 onTap: () {
-                  print(song.album);
+                  miniPlayerController.controller.animateToHeight(height: 70, duration: Durations.medium2);
+                  Navigator.pop(context);
+                  Navigator.push(
+                    getIt<ScaffoldController>().generalScaffoldKey.currentContext!,
+                    createRoute(AlbumPage(album: song.albumModel!))
+                  );
                 },
                 leading: Transform.scale(
                   scale: 0.85,

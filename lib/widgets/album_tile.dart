@@ -74,7 +74,7 @@ class AlbumTile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    album.year,
+                    album.year ?? '',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
                       fontWeight: FontWeight.w600,
