@@ -30,7 +30,6 @@ class ExpandedPlayer extends StatelessWidget {
                 valueListenable: audioController.currentSongNotifier, 
                 builder: (context, value, child) {
                   if (value == null) return const SizedBox.shrink();
-                  print(value.artUri);
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

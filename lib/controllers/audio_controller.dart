@@ -13,6 +13,7 @@ import 'package:monophony/innertube/get_queue.dart';
 
 import '../services/service_locator.dart';
 
+// TODO: Rework the api
 
 class AudioController  {
   final currentSongNotifier = ValueNotifier<SongModel?>(null);

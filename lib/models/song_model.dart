@@ -5,6 +5,8 @@ import 'package:monophony/innertube/models/runs.dart';
 import 'package:monophony/models/album_model.dart';
 import 'package:monophony/utils/parse_duration.dart';
 
+// TODO: make SongModel not depend on MediaItem so that it can hold dart objects
+
 class SongModel extends MediaItem {
   final List<String> artistsList;
   final List<String> artistsId;

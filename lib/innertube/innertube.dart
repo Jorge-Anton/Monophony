@@ -3,6 +3,8 @@ import 'package:monophony/models/album_model.dart';
 import 'package:monophony/models/song_model.dart';
 import 'package:monophony/models/thumbnail_model.dart';
 
+// TODO: Unify requests
+
 class ArtistPage {
   final String? name;
   final String? description;

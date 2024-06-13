@@ -8,7 +8,7 @@ class OptionsButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        print('options');
+        debugPrint('options');
       }, 
       icon: const FaIcon(
         FontAwesomeIcons.sliders,

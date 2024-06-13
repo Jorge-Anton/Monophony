@@ -149,11 +149,11 @@ class AlbumSongsPage extends ConsumerWidget {
                     onTap: () async {
                       _selectedSongNotifier.setActiveSong(song);
                       _myMiniPlayerController.dragDownPercentageNotifier.value = 0;
-                      await _audioController.loadThisPlaylist(result);
-                      _audioController.skipToItem(song);
                       if (_selectedSongNotifier.value != null) {
                         _myMiniPlayerController.controller.animateToHeight(height: MediaQuery.of(context).size.height, duration: Durations.medium2);
                       }
+                      await _audioController.loadThisPlaylist(result);
+                      _audioController.skipToItem(song);
                     }, 
                     onLongPress: () {
                       showSongDetails(song);
