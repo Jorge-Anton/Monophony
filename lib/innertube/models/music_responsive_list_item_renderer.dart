@@ -20,7 +20,7 @@ class MusicResponsiveListItemRenderer {
   Run? findSectionByPageType(String pageType) {
     Run? run;
     for (final flexcolumn in flexColumns) {
-      run = flexcolumn.musicResponsiveListItemFlexColumnRenderer?.text?.runs.cast<Run?>().firstWhere((Run? run) {
+      run = flexcolumn.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.cast<Run?>().firstWhere((Run? run) {
         return run?.navigationEndpoint?.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == pageType;
       },
       orElse: () => null

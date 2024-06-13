@@ -34,6 +34,7 @@ Future showSongDetails(SongModel song, {bool fromQueue = false}) {
                         imageUrl: song.artUri.toString(),
                         height: 58.0,
                         width: 58.0,
+                        fit: BoxFit.cover,
                       ),
                     ),
                     const SizedBox(width: 12.0),

@@ -20,7 +20,7 @@ class SectionListRenderer {
   Content? findSectionByTitle(String text) {
     return contents?.cast<Content?>().firstWhere((Content? content) {
       final title = content?.musicCarouselShelfRenderer?.header?.musicCarouselShelfBasicHeaderRenderer?.title ?? content?.musicShelfRenderer?.title;
-      return title?.runs.firstOrNull?.text == text;
+      return title?.runs?.firstOrNull?.text == text;
     },
     orElse: () => null
     );

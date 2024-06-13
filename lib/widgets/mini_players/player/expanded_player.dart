@@ -30,23 +30,19 @@ class ExpandedPlayer extends StatelessWidget {
                 valueListenable: audioController.currentSongNotifier, 
                 builder: (context, value, child) {
                   if (value == null) return const SizedBox.shrink();
+                  print(value.artUri);
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(6.0),
-                        child: CachedNetworkImage(
-                          useOldImageOnUrlChange: true,
-                          imageUrl: '${value.artUri}-w480-h480',
-                          placeholder: (context, url) {
-                            return AspectRatio(
-                              aspectRatio: 1,
-                              child: Container(
-                                width: double.infinity,
-                                color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
-                              ),
-                            );
-                          },
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: CachedNetworkImage(
+                            useOldImageOnUrlChange: true,
+                            imageUrl: value.artUri.toString().startsWith('https://i.ytimg.com') ? value.artUri.toString() : '${value.artUri}-w480-h480',
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                       Column(

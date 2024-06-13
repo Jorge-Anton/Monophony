@@ -55,6 +55,7 @@ class SongTile extends StatelessWidget {
               imageUrl: song.artUri.toString(),
               height: 60,
               width: 60,
+              fit: BoxFit.cover,
             ),
             if (active)
             Positioned.fill(

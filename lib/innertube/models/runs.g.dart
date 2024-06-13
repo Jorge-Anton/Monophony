@@ -7,13 +7,13 @@ part of 'runs.dart';
 // **************************************************************************
 
 Runs _$RunsFromJson(Map<String, dynamic> json) => Runs(
-      (json['runs'] as List<dynamic>)
-          .map((e) => Run.fromJson(e as Map<String, dynamic>))
+      (json['runs'] as List<dynamic>?)
+          ?.map((e) => Run.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
 Map<String, dynamic> _$RunsToJson(Runs instance) => <String, dynamic>{
-      'runs': instance.runs.map((e) => e.toJson()).toList(),
+      'runs': instance.runs?.map((e) => e.toJson()).toList(),
     };
 
 Run _$RunFromJson(Map<String, dynamic> json) => Run(

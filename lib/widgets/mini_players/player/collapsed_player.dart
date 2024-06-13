@@ -43,7 +43,8 @@ class CollapsedPlayer extends StatelessWidget {
                             child: CachedNetworkImage(
                               imageUrl: value.artUri.toString(),
                               height: 58.0,
-                              width: 58.0,  
+                              width: 58.0,
+                              fit: BoxFit.cover,
                             ),
                           ),
                           const SizedBox(width: 10.0),

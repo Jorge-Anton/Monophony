@@ -5,20 +5,22 @@ part 'runs.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Runs {
-  List<Run> runs = List.empty();
+  List<Run>? runs = List.empty();
 
   Runs(this.runs);
 
   factory Runs.fromJson(Map<String, dynamic> json) => _$RunsFromJson(json);
   Map<String, dynamic> toJson() => _$RunsToJson(this);
 
-  String get text => runs.map((e) => e.text).join();
+  String get text => runs?.nonNulls.map((e) => e.text).join() ?? '';
 
   List<String> splitBySeparator () {
     final List<String> result = [];
-    for (final run in runs) {
-      if (run.text == ' • ') break;
-      result.add(run.text ?? '');
+    if (runs != null) {
+      for (final run in runs!) {
+        if (run.text == ' • ') break;
+        result.add(run.text ?? '');
+      }
     }
     return result;
   }

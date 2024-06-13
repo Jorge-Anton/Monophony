@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monophony/controllers/audio_controller.dart';
 import 'package:monophony/controllers/fab_controller.dart';
 import 'package:monophony/controllers/mini_player_controller.dart';
-import 'package:monophony/innertube/albums/get_album_songs.dart';
-import 'package:monophony/models/album_model.dart';
+import 'package:monophony/innertube/lists/get_list_songs.dart';
+import 'package:monophony/models/list_model.dart';
 import 'package:monophony/models/song_model.dart';
 import 'package:monophony/notifiers/selected_song_notifier.dart';
 import 'package:monophony/services/service_locator.dart';
@@ -15,24 +15,25 @@ import 'package:monophony/widgets/my_text_field.dart';
 import 'package:monophony/widgets/show_song_details.dart';
 import 'package:monophony/widgets/song_tile.dart';
 
-class AlbumSongsPage extends ConsumerWidget {
-  const AlbumSongsPage({
+class ListSongsPage extends ConsumerWidget {
+  const ListSongsPage({
     super.key,
-    required this.album
+    required this.list
   });
 
-  final AlbumModel album;
+  final ListModel list;
 
   static final AudioController _audioController = getIt<AudioController>();
   static final SelectedSongNotifier _selectedSongNotifier = getIt<SelectedSongNotifier>();
   static final MyMiniPlayerController _myMiniPlayerController = getIt<MyMiniPlayerController>();
   static final _fabController = FabController();
 
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
-    final TextEditingController controller = TextEditingController(text: album.name);
-    final AsyncValue<List<SongModel>?> songResults = ref.watch(getAlbumSongsProvider(album.endpoint));
+    final TextEditingController controller = TextEditingController(text: list.name);
+    final AsyncValue<List<SongModel>?> songResults = ref.watch(getListSongsProvider(list.endpoint));
     return songResults.when(
       data: (result) {
         if (result == null) {
@@ -118,9 +119,9 @@ class AlbumSongsPage extends ConsumerWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(6.0),
                       child: CachedNetworkImage(
-                        imageUrl: '${result.firstOrNull?.artUri}-w480-h480',
-                        fit: BoxFit.cover,
+                        imageUrl: list.thumbnail?.size(480) ?? '',
                         width: double.infinity,
+                        fit: BoxFit.cover,
                         errorWidget: (context, url, error) {
                           return AspectRatio(
                             aspectRatio: 1,
@@ -145,7 +146,6 @@ class AlbumSongsPage extends ConsumerWidget {
                   for (final song in result)
                   SongTile(
                     song: song, 
-                    index: result.indexOf(song) + 1,
                     onTap: () async {
                       _selectedSongNotifier.setActiveSong(song);
                       _myMiniPlayerController.dragDownPercentageNotifier.value = 0;
@@ -187,8 +187,8 @@ class AlbumSongsPage extends ConsumerWidget {
             ),
           ),
         );
-      }, 
-      error: (error, stackTrace) => Text(error.toString()), 
+      },
+      error: (error, stackTrace) => Text(error.toString()),
       loading: () {
         return Column(
           mainAxisSize: MainAxisSize.max,
@@ -208,7 +208,7 @@ class AlbumSongsPage extends ConsumerWidget {
             )
           ],
         );
-      },
+      }
     );
   }
 }

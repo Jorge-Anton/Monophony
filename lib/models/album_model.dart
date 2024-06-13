@@ -19,10 +19,10 @@ class AlbumModel {
 
   factory AlbumModel.fromMusicTwoRowItemRenderer(MusicTwoRowItemRenderer renderer) {
     return AlbumModel(
-      name: renderer.title?.runs.firstOrNull?.text ?? '', 
-      year: renderer.subtitle?.runs.lastOrNull?.text ?? '',
+      name: renderer.title?.runs?.firstOrNull?.text ?? '', 
+      year: renderer.subtitle?.runs?.lastOrNull?.text ?? '',
       thumbnail: renderer.thumbnailRenderer?.musicThumbnailRenderer?.thumbnail?.thumbnails?.firstOrNull,
-      endpoint: renderer.title?.runs.firstOrNull?.navigationEndpoint?.browseEndpoint?.browseId ?? ''
+      endpoint: renderer.title?.runs?.firstOrNull?.navigationEndpoint?.browseEndpoint?.browseId ?? ''
     );
   }
 

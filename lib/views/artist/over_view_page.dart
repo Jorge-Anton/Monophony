@@ -101,6 +101,7 @@ class OverViewPage extends ConsumerWidget {
                     child: ClipOval(
                       child: CachedNetworkImage(
                         imageUrl: result.thumbnail?.size(480) ?? '',
+                        fit: BoxFit.cover,
                         errorWidget: (context, url, error) {
                           return AspectRatio(
                             aspectRatio: 1,
@@ -217,6 +218,7 @@ class OverViewPage extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(6.0),
                                     child: CachedNetworkImage(
                                       imageUrl: result.albums?[index].thumbnail?.size(120) ?? '',
+                                      fit: BoxFit.cover,
                                       errorWidget: (context, url, error) {
                                         return AspectRatio(
                                           aspectRatio: 1,
@@ -296,6 +298,7 @@ class OverViewPage extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(6.0),
                                     child: CachedNetworkImage(
                                       imageUrl: result.singles?[index].thumbnail?.size(120) ?? '',
+                                      fit: BoxFit.cover,
                                       errorWidget: (context, url, error) {
                                         return AspectRatio(
                                           aspectRatio: 1,

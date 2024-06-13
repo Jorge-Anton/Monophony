@@ -20,7 +20,7 @@ class PlaylistPanelVideoRenderer {
   Map<String, dynamic> toJson() => _$PlaylistPanelVideoRendererToJson(this);
 
   Run? findSectionByPageType(String pageType) {
-    return longBylineText?.runs.cast<Run?>().firstWhere((Run? run) {
+    return longBylineText?.runs?.cast<Run?>().firstWhere((Run? run) {
       return run?.navigationEndpoint?.browseEndpoint?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType == pageType;
     },
     orElse: () => null,

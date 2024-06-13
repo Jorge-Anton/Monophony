@@ -38,17 +38,17 @@ class SongModel extends MediaItem {
 
   factory SongModel.fromMusicResponsiveListItemRenderer(MusicResponsiveListItemRenderer renderer) {
     final List<String> artist = renderer.flexColumns.elementAtOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.splitBySeparator() ?? [];
-    final List<String> artistsId = renderer.flexColumns.elementAtOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs.map((e) => e.navigationEndpoint?.browseEndpoint?.browseId ?? '').toList() ?? [];
+    final List<String> artistsId = renderer.flexColumns.elementAtOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.map((e) => e.navigationEndpoint?.browseEndpoint?.browseId ?? '').toList() ?? [];
     final List<String> artistsList = artist.nonNulls.where((e) => e != ' & ' && e != ', ').toList();
     Duration? duration;
     if (renderer.flexColumns.elementAtOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.text.contains(' • ') == true) {
-      final String? stringDuration = renderer.flexColumns.elementAtOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs.lastOrNull?.text;
+      final String? stringDuration = renderer.flexColumns.elementAtOrNull(1)?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.lastOrNull?.text;
       if (stringDuration != null) {
         duration = parseDuration(stringDuration);
       }
     }
     if (duration == null) {
-      final String? stringDuration = renderer.fixedColumns?.firstOrNull?.musicResponsiveListItemFlexColumnRenderer?.text?.runs.firstOrNull?.text;
+      final String? stringDuration = renderer.fixedColumns?.firstOrNull?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.firstOrNull?.text;
       if (stringDuration != null) {
         duration = parseDuration(stringDuration);
       }
@@ -64,8 +64,8 @@ class SongModel extends MediaItem {
     }
 
     return SongModel(
-      title: renderer.flexColumns.firstOrNull?.musicResponsiveListItemFlexColumnRenderer?.text?.runs.firstOrNull?.text ?? '', 
-      id: renderer.flexColumns.firstOrNull?.musicResponsiveListItemFlexColumnRenderer?.text?.runs.firstOrNull?.navigationEndpoint?.watchEndpoint?.videoId ?? '',
+      title: renderer.flexColumns.firstOrNull?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.firstOrNull?.text ?? '', 
+      id: renderer.flexColumns.firstOrNull?.musicResponsiveListItemFlexColumnRenderer?.text?.runs?.firstOrNull?.navigationEndpoint?.watchEndpoint?.videoId ?? '',
       duration: duration,
       artist: artist.join(),
       artistsList: artistsList,
@@ -85,7 +85,7 @@ class SongModel extends MediaItem {
 
   factory SongModel.fromPlaylistVideoRenderer(PlaylistPanelVideoRenderer renderer) {
     final List<String> artist = renderer.longBylineText?.splitBySeparator() ?? [];
-    final List<String> artistsId = renderer.longBylineText?.runs.nonNulls.map((e) => e.navigationEndpoint?.browseEndpoint?.browseId ?? '').toList() ?? [];
+    final List<String> artistsId = renderer.longBylineText?.runs?.nonNulls.map((e) => e.navigationEndpoint?.browseEndpoint?.browseId ?? '').toList() ?? [];
     final Run? albumSection = renderer.findSectionByPageType('MUSIC_PAGE_TYPE_ALBUM');
     AlbumModel? albumModel;
     if (albumSection != null) {
@@ -99,7 +99,7 @@ class SongModel extends MediaItem {
     return SongModel(
       title: renderer.title?.text ?? '', 
       id: renderer.navigationEndpoint?.watchEndpoint?.videoId ?? '',
-      duration: parseDuration(renderer.lengthText?.runs.firstOrNull?.text ?? ''),
+      duration: parseDuration(renderer.lengthText?.runs?.firstOrNull?.text ?? ''),
       artist: artist.join(),
       artistsList: artist.where((e) => e != ' & ' && e != ', ').toList(),
       artistsId: artistsId,

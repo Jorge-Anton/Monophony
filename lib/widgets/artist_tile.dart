@@ -23,6 +23,7 @@ class ArtistTile extends StatelessWidget {
           imageUrl: artist.thumbnail?.size(120) ?? '',
           width: 64,
           height: 64,
+          fit: BoxFit.cover,
         ),
       ),
       title: Text(
