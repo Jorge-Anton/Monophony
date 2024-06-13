@@ -1,43 +1,45 @@
 import 'dart:convert';
-
 import 'package:brotli/brotli.dart';
-import 'package:http/http.dart' as http;
+import 'package:monophony/innertube/innertube.dart';
+import 'package:monophony/innertube/models/search_suggestions_response.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-Future<List<String>> getSearchSuggestions(String query) async {
-  List<String> result = [];
-  if (query == '') return result;
+part 'get_search_suggestions.g.dart';
 
-  final headers = {
-    'Accept': 'application/json',
-    'accept-charset': 'UTF-8',
-    'accept-encoding': 'br',
-    'conection': 'Keep-Alive',
-    'content-type': 'application/json',
-    'host': 'music.youtube.com',
-    'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/70.0.3538.77 Chrome/70.0.3538.77 Safari/537.36',
-    'x-goog-api-key': 'AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8',
-    'x-goog-fieldmask': 'contents.searchSuggestionsSectionRenderer.contents.searchSuggestionRenderer.navigationEndpoint.searchEndpoint.query'
-  };
+@riverpod
+class QueryNotifier extends _$QueryNotifier {
+  @override
+  String build() => '';
 
-  final body = '''{"context":{"client":{"clientName":"WEB_REMIX","clientVersion":"1.20220918","platform":"DESKTOP","hl":"en","visitorData":"CgtEUlRINDFjdm1YayjX1pSaBg%3D%3D"}},"input":"$query"}''';
+  void updateQuery(String query) => state = query;
+}
 
-  final res = await http.post(
-    Uri.parse('https://music.youtube.com/youtubei/v1/music/get_search_suggestions?prettyPrint=false'),
-    body: body,
-    headers: headers
+@riverpod
+Future<List<String?>> getSearchSuggestions(GetSearchSuggestionsRef ref) async {
+  var didDispose = false;
+  ref.onDispose(() => didDispose = true);
+
+  final query = ref.watch(queryNotifierProvider);
+  if (query == '') return [];
+
+  await Future<void>.delayed(const Duration(milliseconds: 200));
+
+  if (didDispose) {
+    return [];
+  }
+
+  final innerTube = Innertube();
+
+  final res = await innerTube.post(
+    Innertube.searchSuggestions,
+    body: innerTube.searchSuggestionsBody(input: query),
+    headers: innerTube.mask(value: 'contents.searchSuggestionsSectionRenderer.contents.searchSuggestionRenderer.navigationEndpoint.searchEndpoint.query')
   );
 
-  if (res.statusCode == 200) {
-    final decodedBr = brotli.decodeToString(res.bodyBytes, encoding: const Utf8Codec());
-    final json = jsonDecode(decodedBr);
-    for (final i in json["contents"][0]["searchSuggestionsSectionRenderer"]["contents"]) {
-      final suggestion = i["searchSuggestionRenderer"]["navigationEndpoint"]["searchEndpoint"]["query"];
-      if (suggestion != null) {
-        result.add(suggestion);
-      }
-    }
-    return result;
-  } else {
-    throw Exception('Network error');
-  }
+  if (res.statusCode != 200) throw Exception('Request error');
+  
+  final decodedBr = brotli.decodeToString(res.bodyBytes, encoding: const Utf8Codec());
+  final SearchSuggestionsResponse json = SearchSuggestionsResponse.fromJson(jsonDecode(decodedBr));
+
+  return json.contents?.firstOrNull?.searchSuggestionsSectionRenderer?.contents?.nonNulls.map((e) => e.searchSuggestionRenderer?.navigationEndpoint?.searchEndpoint?.query).toList() ?? List.empty();
 }

@@ -1,6 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/innertube/get_search_suggestions.dart';
 import 'package:monophony/services/service_locator.dart';
@@ -8,67 +7,33 @@ import 'package:monophony/utils/create_route.dart';
 import 'package:monophony/views/search_results/results_page.dart';
 import 'package:monophony/widgets/my_text_field.dart';
 
-class OnlineSearchPage extends StatefulWidget {
+class OnlineSearchPage extends ConsumerStatefulWidget {
   const OnlineSearchPage({super.key});
 
   @override
-  State<OnlineSearchPage> createState() => _OnlineSearchPageState();
+  ConsumerState<OnlineSearchPage> createState() => _OnlineSearchPageState();
 }
 
-class _OnlineSearchPageState extends State<OnlineSearchPage> {
+class _OnlineSearchPageState extends ConsumerState<OnlineSearchPage> {
   late TextEditingController _controller;
   late ActiveSearchNotifier _activeSearchNotifier;
-  Timer? _debounce;
-  final int _debounceTime = 250;
-  List<String> _searchResults = [];
-  bool _networkError = false;
 
   @override
   void initState() {
     super.initState();
     _activeSearchNotifier = getIt<ActiveSearchNotifier>();
     _controller = TextEditingController(text: _activeSearchNotifier.value);
-    _controller.addListener(onQueryChanged);
   }
 
   @override
   void dispose() {
-    _controller.removeListener(onQueryChanged);
     _controller.dispose();
     super.dispose();
   }
 
-  void onQueryChanged() {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(Duration(milliseconds: _debounceTime), () async {
-      if (_controller.text != '') {
-        try {
-          final result = await getSearchSuggestions(_controller.text);
-          if (mounted) {
-            setState(() {
-              _networkError = false;
-              _searchResults = result;
-            });
-          }
-        } catch (e) {
-          if (mounted) {
-            setState(() {
-              _networkError = true;
-            });
-          } else {
-            _networkError = true;
-          }
-        }
-      } else {
-        setState(() {
-          _searchResults = [];
-        });
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final AsyncValue<List<String?>> searchResults = ref.watch(getSearchSuggestionsProvider);
     final statusBarHeight = MediaQuery.of(context).viewPadding.top;
     return SingleChildScrollView(
       child: Column(
@@ -79,9 +44,12 @@ class _OnlineSearchPageState extends State<OnlineSearchPage> {
               controller: _controller,
               autofocus: true,
               onSubmitted: (value) {
-                _activeSearchNotifier.setActiveSearch(value);
-                Navigator.of(context).pushAndRemoveUntil(createRoute(const ResultsPage()), ModalRoute.withName("/"));
+                if (value != '') {
+                  _activeSearchNotifier.setActiveSearch(value);
+                  Navigator.of(context).pushAndRemoveUntil(createRoute(const ResultsPage()), ModalRoute.withName("/"));
+                }
               },
+              onChanged: (value) => ref.read(queryNotifierProvider.notifier).updateQuery(value),
               hintText: 'Busca algo',
             ),
           ),
@@ -99,7 +67,7 @@ class _OnlineSearchPageState extends State<OnlineSearchPage> {
                   onPressed: () {
                     setState(() {
                       _controller.clear();
-                      _searchResults.clear();
+                      ref.read(queryNotifierProvider.notifier).updateQuery('');
                     });
                   }, 
                   child: const Text('Borrar')
@@ -107,43 +75,55 @@ class _OnlineSearchPageState extends State<OnlineSearchPage> {
               ),
             ),
           ),
-          if (_networkError)
-            const Text('Error de conexión')
-          else
-            for (final item in _searchResults)
-              ListTile(
-                contentPadding: const EdgeInsets.only(right: 2.0, left: 25.0),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      visualDensity: const VisualDensity(horizontal: -4),
-                      onPressed: () {
-                        _controller.text = item;
-                      }, 
-                      icon: Transform.scale(
-                        scaleX: -1,
-                        child: Icon(
-                          Icons.arrow_outward_rounded,
-                          color: Theme.of(context).colorScheme.secondary,
+          Column(
+            children: [
+              searchResults.when(
+                data: (results) {
+                  if (results.isEmpty) return const SizedBox.shrink();
+                  return Column(
+                    children: [
+                      for (final result in results)
+                      if (result != null)
+                      ListTile(
+                        contentPadding: const EdgeInsets.only(right: 2.0, left: 25.0),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              visualDensity: const VisualDensity(horizontal: -4),
+                              onPressed: () {
+                                _controller.text = result;
+                              }, 
+                              icon: Transform.scale(
+                                scaleX: -1,
+                                child: Icon(
+                                  Icons.arrow_outward_rounded,
+                                  color: Theme.of(context).colorScheme.secondary,
+                                ),
+                              )
+                            )
+                          ],
                         ),
+                        onTap: () {
+                          _activeSearchNotifier.setActiveSearch(result);
+                          Navigator.of(context).pushAndRemoveUntil(createRoute(const ResultsPage()), ModalRoute.withName("/"));
+                        },
+                        title: Text(
+                          result,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary
+                          ),
+                        ),
+                        // TODO: añadir leading para los históricos
                       )
-                    )
-                  ],
-                ),
-                onTap: () {
-                  // ref.read(activeSearchControllerProvider.notifier).setActiveSearch(item);
-                  _activeSearchNotifier.setActiveSearch(item);
-                  Navigator.of(context).pushAndRemoveUntil(createRoute(const ResultsPage()), ModalRoute.withName("/"));
-                },
-                title: Text(
-                  item,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary
-                  ),
-                ),
-                // TODO: añadir leading para los históricos
+                    ],
+                  );
+                }, 
+                error: (error, stackTrace) => const Text('Ha ocurrido un error'), 
+                loading: () => const SizedBox.shrink(),
               )
+            ],
+          )
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:monophony/innertube/innertube.dart';
 import 'package:monophony/notifiers/active_search_controller.dart';
 import 'package:monophony/controllers/audio_controller.dart';
 import 'package:monophony/notifiers/dominant_color_controller.dart';
@@ -18,4 +19,6 @@ Future<void> setupServiceLocator() async {
   getIt.registerLazySingleton<AudioController>(() => AudioController());
   getIt.registerLazySingleton<ScaffoldController>(() => ScaffoldController());
   getIt.registerLazySingleton<DominantColorNotifier>(() => DominantColorNotifier());
+
+  getIt.registerLazySingleton<Innertube>(() => Innertube());
 }

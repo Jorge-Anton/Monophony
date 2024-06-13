@@ -9,6 +9,7 @@ class MyTextField extends StatelessWidget {
     this.autofocus = false,
     this.textInputAction = TextInputAction.search,
     this.onSubmitted,
+    this.onChanged,
     required this.controller
   });
 
@@ -18,6 +19,7 @@ class MyTextField extends StatelessWidget {
   final bool autofocus;
   final TextInputAction textInputAction;
   final void Function(String value)? onSubmitted;
+  final void Function(String value)? onChanged;
   final TextEditingController controller;
 
   @override
@@ -50,6 +52,9 @@ class MyTextField extends StatelessWidget {
         if (onSubmitted != null) {
           onSubmitted!(value);
         }
+      },
+      onChanged: (value) {
+        if (onChanged != null) onChanged!(value);
       },
     );
   }
